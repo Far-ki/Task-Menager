@@ -1,0 +1,34 @@
+1)	- postawienie strony 
+	- logowanie/wylogowanie/autoryzacja
+	- frontend (do rozdzielenia później)
+1)	- Projekt bazy danych/implementacja na stronie
+	- Komunikacja z bazą danych
+
+	Aplikacja:
+		- wyświetlanie zadania na dziś na stronie głównej
+		- możliwość podejrzenia zadań na najbliższy tydzień na stronie głównej
+		Kalendarz:
+1)			- szkielet kalendarza
+2)			- dodawanie/modyfikowanie/usuwanie wydarzeń w konkretnym dniu w konkretnym przediale godzinowym.
+			- dodawanie notatek do wydarzeń
+			- dodawanie przypomnień X czasu przed wydarzeniem (pop up)
+			- wydarzenia cykliczne
+			
+2)			- dodawanie/modyfikowanie/usuwanie list (TO DO) w konkretnym dniu z opcjonalną godziną.
+			- Zmienianie kolorów tasków
+			- check boxy do tasków
+			
+			- Możliwość dodawania zadań długo terminowych (rozciągających się na przestrzeni wielu dni)
+			- Dodawanie do zadań długoterminowych "pod-zadań" (to do list na każdy dzień ale konkretnie do jakiegoś zadania długoterminowego)
+			
+2.5)		Kalendarz grupowy:
+			- tworzenie grup i dodawanie do nich użytkowników po kodzie (tokenie)
+			- te same funkcje co zwykły kalendarza
+			- opcja dołączenia do grupy (wpisanie gdzies tego tokena)
+			- przypisywanie/usuwanie osób z grupy do konkretnych elementów (wydarzeń/tasków itd.)
+		
+		
+		Historia:
+			- Wyświetlanie przeszłych dni wraz z "zawartością" (dzień jest wyświetlony tylko jeśli takowa istnieje)
+			- Informacja (np. kolor) czy task został zrealizowany na podstawie zaznaczonego (lub nie) check boxa
+			- Usuwanie wpisów starszych niż np. rok (?)
