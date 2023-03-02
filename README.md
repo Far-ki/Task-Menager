@@ -1,5 +1,5 @@
 Warstwa webowa:
-- logowanie
+- logowanie / wylogowanie
 - sama w sobie strona
 - Strona główna, wyświetlająca zadania na dziś, możliwość podejrzenia zadań na najbliższy tydzień.
 - Podłączenie chatgpt poprzez API (jak będzie obciążony to jakiś komunikat)
