@@ -7,13 +7,12 @@ DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'fsjkfsadassff'
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    app.config['SECRET_KEY'] = 'fsjkfsadassff'                          #admin - pswd database
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost/sampledb'
+
+
     db.init_app(app)
-
     from .models import User
-
-    # Move the imports of views and auth here
     from .views import views
     from .auth import auth
 
