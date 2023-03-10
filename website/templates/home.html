@@ -1,14 +1,37 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Homepage</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
+
+
+<title>Callendary</title>
+
+
+<header>
+        <div class="container">
+          <h1 class="logo"></h1>
+    
+          <nav>
+            <ul>
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Callendary</a></li>
+              <li><a href="#">Login</a></li>
+              <li><a href="#">logout</a></li>
+              <li><a href="http://127.0.0.1:5000/Registration">Registration</a></li>
+            </ul>
+          </nav>
+        </div>
+</header>
 <body>
-    <h1>List of Users:</h1>
-    <ul>
-        {% for user in users %}
-        <li>{{ user.email }}</li>
-        {% endfor %}
-    </ul>
+    <div class="User_list">
+        <h1>List of Users:</h1>
+        <ul>
+            {% for user in users %}
+            <li>{{ user.email }}</li>
+            {% endfor %}
+        </ul>
+    </div> 
 </body>
 </html>

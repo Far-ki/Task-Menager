@@ -6,7 +6,10 @@ db = SQLAlchemy()
 DB_NAME = "database.db"
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__,
+            static_url_path='', 
+            static_folder='./static',
+            template_folder='./templates')
     app.config['SECRET_KEY'] = 'fsjkfsadassff'                          #admin - pswd database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost/sampledb'
 
