@@ -11,7 +11,7 @@ def home():
     users = User.query.all()
 
     # render the homepage template with the list of users
-    return render_template('home.html', users=users)
+    return render_template('home.html', users=users, user="")
 
 
 @views.route('/Registration', methods=['GET', 'POST'])
