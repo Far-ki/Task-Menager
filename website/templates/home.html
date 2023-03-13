@@ -1,37 +1,27 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <link rel="stylesheet" href="styles.css">
 </head>
-
-
 <title>Callendary</title>
-
-
 <header>
-        <div class="container">
-          <h1 class="logo"></h1>
-    
-          <nav>
+    <div class="container">
+        <h1 class="logo"></h1>
+        <nav>
             <ul>
-              
-              
-              
-              
-              {% if user.is_authenticated %}
-              <li><a href="/">Home</a></li>
-              <li><a href="#">Callendary</a></li>
-              <li><a href="/logout">logout</a></li>
-              {% else %}
-              <li><a href="/login">Login</a></li>
-              <li><a href="/sign-up">Sign-up</a></li>
-              {% endif %}
+                {% if user.is_authenticated %}
+                <li><a href="/">Home</a></li>
+                <li><a href="/logout">Logout</a></li>
+                {% else %}
+                <li><a href="/login">Login</a></li>
+                <li><a href="/sign-up">Sign-up</a></li>
+                {% endif %}
             </ul>
-          </nav>
-        </div>
+        </nav>
+    </div>
 </header>
 <body>
+    {% if user.is_authenticated %}
     <div class="User_list">
         <h1>List of Users:</h1>
         <ul>
@@ -39,6 +29,12 @@
             <li>{{ user.email }}</li>
             {% endfor %}
         </ul>
-    </div> 
+    </div>
+    {% else %}
+    <div class="Welcome_message">
+        <h1>Welcome to Callendary!</h1>
+        <p>Please login or sign up to access the website.</p>
+    </div>
+    {% endif %}
 </body>
 </html>

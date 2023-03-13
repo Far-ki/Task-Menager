@@ -13,20 +13,10 @@ def create_app():
             template_folder='./templates')
     app.config['SECRET_KEY'] = 'fsjkfsadassff'                          #admin - pswd database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost/sampledb'
-
-    from .models import User
-
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
-
-
-
     db.init_app(app)
+
+   
+
     from .models import User
     from .views import views
     from .auth import auth
@@ -35,6 +25,16 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/')
 
     create_database(app)
+
+
+    
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+    
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
 
     return app
 
