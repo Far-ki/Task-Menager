@@ -37,10 +37,10 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        is_valid = validate_email(email,verify=True)
-        if not is_valid:
-            flash('Invalid email address.', category='error')
-            return redirect(url_for('auth.sign_up'))
+        #is_valid = validate_email(email,verify=True)
+        #if not is_valid:
+            #flash('Invalid email address.', category='error')
+            #return redirect(url_for('auth.sign_up'))
 
         user = User.query.filter_by(email=email).first()
         if user:
