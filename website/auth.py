@@ -3,7 +3,7 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db   ##means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
-from validate_email import validate_email
+#from validate_email import validate_email
 auth = Blueprint('auth', __name__)
 
 
@@ -37,10 +37,10 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        is_valid = validate_email(email,verify=True)
-        if not is_valid:
-            flash('Invalid email address.', category='error')
-            return redirect(url_for('auth.sign_up'))
+      #  is_valid = validate_email(email,verify=True)
+       # if not is_valid:
+        #    flash('Invalid email address.', category='error')
+         #   return redirect(url_for('auth.sign_up'))
 
         user = User.query.filter_by(email=email).first()
         if user:
