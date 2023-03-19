@@ -83,3 +83,78 @@ nav a::before {
 nav a:hover::before {
   width: 100%;
 }
+
+.flashes {
+  list-style: none;
+  padding: 0;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  width: 700px;
+  margin: auto;
+}
+
+.article-metadata {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.article-title {
+  margin-top: none;
+  color: #444444;
+  font-size: 20px;
+}
+
+.article-content {
+  min-height: 100px;
+  white-space: pre-line;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  font-size: 16px;
+}
+.button_space
+{
+  position: relative;
+}
+
+.task-headers {
+  margin: 0;
+  font-size: 1em;
+  display: block;
+}
+
+.btn-delete {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #ffffff;
+  border-style: solid;
+  border-radius: 15px;
+  width: 100px;
+  height: 30px;
+  position: absolute;
+  right:    0;
+  bottom:   0;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+  color: #ffffff;
+}

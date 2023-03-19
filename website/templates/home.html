@@ -1,40 +1,77 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <title>Callendary</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<title>Callendary</title>
-<header>
-    <div class="container">
+
+<body>
+   
+  
+    <header>
+      <div class="container">
         <h1 class="logo"></h1>
         <nav>
-            <ul>
-                {% if user.is_authenticated %}
-                <li><a href="/">Home</a></li>
-                <li><a href="/logout">Logout</a></li>
-                {% else %}
-                <li><a href="/login">Login</a></li>
-                <li><a href="/sign-up">Sign-up</a></li>
-                {% endif %}
-            </ul>
+          <ul>
+            {% if user.is_authenticated %}
+            <li><a href="/">Home</a></li>
+            <li><a href="/logout">Logout</a></li>
+            {% else %}
+            <li><a href="/login">Login</a></li>
+            <li><a href="/sign-up">Sign-up</a></li>
+            {% endif %}
+          </ul>
         </nav>
-    </div>
-</header>
-<body>
-    {% if user.is_authenticated %}
-    <div class="User_list">
-        <h1>List of Users:</h1>
-        <ul>
-            {% for user in users %}
-            <li>{{ user.email }}</li>
-            {% endfor %}
+      </div>
+    </header>
+   {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+          {% endfor %}
         </ul>
-    </div>
-    {% else %}
-    <div class="Welcome_message">
-        <h1>Welcome to Callendary!</h1>
-        <p>Please login or sign up to access the website.</p>
-    </div>
+      {% endif %}
+    {% endwith %}
+    
+    {% if user.is_authenticated %}
+    <form method="post" action="{{ url_for('task.create_task') }}">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <br>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description"></textarea>
+      <input type="submit" value="Create">
+    </form>
+    {% block content %}
+    {% for task in current_user.task %}
+    <article class="media content-section">
+      <div class="article-metadata">
+        <span class="align-left">#{{ task.id }}</span>
+        <span class="align-right">{{ task.created_at.strftime('%Y-%m-%d') }}</span>
+      </div>
+      <div class="media-body">
+        <h1 class="task-headers"><a class="article-title" href="#">{{ task.name }}</a></h1>
+        <p class="article-content">{{ task.description }}</p>
+          
+      </div>
+      <div class="button_space">
+        <form action="{{ url_for('task.delete_task') }}" method="POST" class="d-inline">
+          <input type="hidden" name="task_id" value="{{ task.id }}">
+          <button type="submit" class="btn-delete">Delete Task</button>
+        </form>
+      </div>
+    </article>
+    {% endfor %}
+    {% endblock %}
+
     {% endif %}
-</body>
+
+  </body>
+
 </html>
+
+
+
+

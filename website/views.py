@@ -8,9 +8,6 @@ views = Blueprint('views',__name__)
 
 @views.route('/')
 def home():
-    # query the database for all users
-    users = User.query.all() # <-- do wywalenia po zajeciach, bo rejestracja ogarnieta
-
-    return render_template('home.html', users=users,user = current_user)
+    return render_template('home.html',user = current_user)
 
 
