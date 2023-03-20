@@ -29,10 +29,12 @@ html, body, .container-fluid {
 }
 .navbar-brand span {
 	color: #89969e;
+  
 }
 .navbar {
 	border-bottom:2px solid #0275d8;
 }
+
 
 
 /*
@@ -70,6 +72,181 @@ html, body, .container-fluid {
 .sidebar .dropdown-menu a:hover {
 	color: #373a3c;
 }
+.dropdown-tree .dropdown-item {
+	white-space: normal;
+	padding:3px 0;
+}
+
+.dropdown-tree .dropdown-menu {
+	position: relative!important;
+	transform:none!important;
+	top: 100%;
+	left: 0;
+	float: none;
+	min-width: 0;
+	padding: 0px;
+	margin: 0px;
+	font-size: 1rem;
+	color: #373a3c;
+	text-align: left;
+	list-style: none;
+	background-color: #555;
+	border: none;
+}
+
+.dropdown-tree .dropdown-toggle::after {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: .3em;
+	vertical-align: middle;
+	content: "";
+	border:none;
+	border-top: .4em solid transparent;
+	border-right: .4em solid;
+	border-bottom: .4em solid	transparent;
+	border-left: .4em solid	transparent;
+}
+
+.dropdown-tree.show .dropdown-toggle::after {
+	margin-top:3px;
+	display: inline-block;
+	margin-left: 10px;
+	border-top: .4em solid ;
+	border-right: .4em solid transparent;
+}
+
+
+
+.card-deck .card {
+	margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) { 
+	.card-deck .card {
+		flex-direction: column;
+		-webkit-box-flex: 1 1 auto; 
+		-webkit-flex: 1 1 auto; 
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+		margin-bottom: 1rem;
+	}
+
+
+.flashes {
+  list-style: none;
+  padding: 0;
+}
+
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
+
+.card-title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+  }
+  
+  .form-group {
+	margin-bottom: 1rem;
+  }
+  
+  label {
+	font-weight: bold;
+  }
+  
+  input[type="text"],
+  textarea {
+	padding: 0.5rem;
+	font-size: 1rem;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	width: 100%;
+	box-sizing: border-box;
+  }
+  
+  input[type="submit"] {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	cursor: pointer;
+  }
+  
+  .task-headers {
+	font-size: 1.2rem;
+	margin-bottom: 0.5rem;
+  }
+  
+  .article-content {
+	margin-bottom: 0;
+  }
+  
+  .btn-delete {
+	background-color: #dc3545;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	cursor: pointer;
+  }
+  
+  .btn-update {
+	background-color: #28a745;
+	color: #fff;
+	border: none;
+	border-radius: 3px;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	cursor: pointer;
+  }
+  
+  .button_space {
+	margin-top: 1rem;
+  }
+  
+  .media {
+	border: 1px solid #ccc;
+	padding: 1rem;
+	border-radius: 3px;
+	margin-bottom: 1rem;
+  }
+  
+  .media-body {
+	margin-left: 1rem;
+  }
+  
+  .article-title {
+	color: #007bff;
+	text-decoration: none;
+	font-size: 1.2rem;
+  }
+  
+  .article-title:hover {
+	text-decoration: underline;
+  }
+  
+  /* Add the following styles for Flexbox */
+  .button-group {
+	display: flex;
+	gap: 0.5rem;
+  }
+  
+  .btn-delete {
+	flex: 1;
+  }
+  
+  .btn-update {
+	flex: 1;
+  }
 
 .dropdown-tree {
 	flex-direction:column;
