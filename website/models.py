@@ -7,6 +7,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
+    nickname = db.Column(db.String(150), unique=True)
     task = db.relationship('Task',backref='user')
 
 
@@ -32,3 +33,5 @@ class Task(db.Model):
             'created_at': self.created_at.isoformat(),
             'completed': self.completed
         }
+
+    

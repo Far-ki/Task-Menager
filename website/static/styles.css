@@ -5,9 +5,21 @@ body {
 
 html, body, .container-fluid {
 	height: 100%;
+/*
+	padding-left: 0px;
+	padding-right: 0px;
+*/
 }
+
+.container-fluid .row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+
 .main {
-	min-height: 100vh;
+	min-height: 92.5vh;
+	padding-top:15px;
 }
 
 
@@ -17,12 +29,15 @@ html, body, .container-fluid {
 }
 .navbar-brand span {
 	color: #89969e;
+  
 }
 .navbar {
 	border-bottom:2px solid #0275d8;
 }
 
 
+
+/*
 .sidebar, .main {
 	padding-top:2em;
 }
@@ -31,6 +46,12 @@ html, body, .container-fluid {
 	background-color: #373a3c;
 	border-right: 1px solid #eee;
 	padding:0;
+}
+*/
+
+
+.dropdown-menu {
+	margin-bottom: 5px !important;
 }
 
 .sidebar .nav a {
@@ -50,10 +71,6 @@ html, body, .container-fluid {
 
 .sidebar .dropdown-menu a:hover {
 	color: #373a3c;
-}
-
-.dropdown-tree {
-	flex-direction:column;
 }
 .dropdown-tree .dropdown-item {
 	white-space: normal;
@@ -115,32 +132,6 @@ html, body, .container-fluid {
 		margin-bottom: 1rem;
 	}
 
-}
-
-.admin .card-deck .card:last-child {
-	margin-bottom: 0rem;
-}
-
-@media (min-width: 769px) { 
-	.card-deck .card {
-		margin-bottom: 0rem;
-	}
-
-
-	.admin .card-deck .card {
-		margin-left:15px;
-		margin-right:0px;
-	}
-	.admin .card-deck .card:last-child {
-		margin-right:15px;
-	}
-
-}
-
-
-.table td:last-child {
-	white-space: nowrap;
-}
 
 .flashes {
   list-style: none;
@@ -256,3 +247,106 @@ html, body, .container-fluid {
   .btn-update {
 	flex: 1;
   }
+
+.dropdown-tree {
+	flex-direction:column;
+}
+.dropdown-tree .dropdown-item {
+	white-space: normal;
+	padding:3px 0;
+}
+
+.dropdown-tree .dropdown-menu {
+	position: relative!important;
+	transform:none!important;
+	top: 100%;
+	left: 0;
+	float: none;
+	min-width: 0;
+	padding: 0px;
+	margin: 0px;
+	font-size: 1rem;
+	color: #373a3c;
+	text-align: left;
+	list-style: none;
+	background-color: #555;
+	border: none;
+}
+
+.dropdown-tree .dropdown-toggle::after {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: .3em;
+	vertical-align: middle;
+	content: "";
+	border:none;
+	border-top: .4em solid transparent;
+	border-right: .4em solid;
+	border-bottom: .4em solid	transparent;
+	border-left: .4em solid	transparent;
+}
+
+.dropdown-tree.show .dropdown-toggle::after {
+	margin-top:3px;
+	display: inline-block;
+	margin-left: 10px;
+	border-top: .4em solid ;
+	border-right: .4em solid transparent;
+}
+
+
+
+.card-deck .card {
+	margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) { 
+	.card-deck .card {
+		flex-direction: column;
+		-webkit-box-flex: 1 1 auto; 
+		-webkit-flex: 1 1 auto; 
+		-ms-flex: 1 1 auto;
+		flex: 1 1 auto;
+		margin-bottom: 1rem;
+	}
+
+}
+
+.admin .card-deck .card:last-child {
+	margin-bottom: 0rem;
+}
+
+@media (min-width: 769px) { 
+	.card-deck .card {
+		margin-bottom: 0rem;
+	}
+
+
+	.admin .card-deck .card {
+		margin-left:15px;
+		margin-right:0px;
+	}
+	.admin .card-deck .card:last-child {
+		margin-right:15px;
+	}
+
+}
+
+
+.table td:last-child {
+	white-space: nowrap;
+}
+
+
+.login {
+	width: 480px;
+	margin:20px auto;
+	float: none;
+}
+
+.login .card-img-top {
+	height:20vh;
+	object-fit:cover;
+}
+
