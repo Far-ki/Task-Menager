@@ -42,7 +42,7 @@
             </li>
             <li class="nav-item dropdown user">
                           {% if user.is_authenticated %}
-                  <a class="nav-link dropdown-toggle" href="#" role="button" id="responsiveNavbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="" alt="" class="rounded-circle">{{current_user.email}}</a>
+                  <a class="nav-link dropdown-toggle" href="#" role="button" id="responsiveNavbarDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="" alt="" class="rounded-circle">{{current_user.nickname}}</a>
                           <div class="dropdown-menu" aria-labelledby="responsiveNavbarDropdown">
                 <a class="dropdown-item" href="/profile">Profile</a>
                 <a class="dropdown-item" href="/logout">Logout</a
