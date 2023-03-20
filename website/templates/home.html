@@ -1,126 +1,73 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} 
+{% extends "base.html" %} {% block title %}Callendary Home{% endblock %} 
 {% block content %}
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<div class="">
+		<div class="row">
 
+			<!--
+			####################################################
+			S I D E B A R
+			####################################################
+			-->
+			{% if user.is_authenticated %}
+			<div class="col-lg-2 bg-dark sidebar">
 
-		<title>Task calendar</title>
-
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-
-		<link rel="stylesheet" href="styles.css">
-       
-	</head>
-
-	<body class="admin">
-
-		<!--
-		####################################################
-		N A V B A R
-		####################################################
-		-->
-		
-
-
-		<!--
-		####################################################
-		B O D Y
-		####################################################
-		-->
-		<div class="container-fluid">
-			<div class="row">
-
-				<!--
-				####################################################
-				S I D E B A R
-				####################################################
-				-->
-                {% if user.is_authenticated %}
-				<div class="col-lg-2 sidebar">
-
-					<!-- sidebar -->
-					
-					<ul class="nav flex-column">
-						<li class="nav-item">
-							<a class="nav-link" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i> Użytkownicy</a>
-						</li>
-						<li class="nav-item dropdown dropdown-tree btn-group">
-							<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar" aria-hidden="true"></i> Calendary</a>
-							<div class="dropdown-menu">
-								<a class="dropdown-item" href="#">Add task</a>
-								<a class="dropdown-item" href="#">Delete task</a>
-							</div>
-						</li>
-					
-					</ul>
-					
-
-				</div>
-				{% endif %}	
-
-				<!--
-				####################################################
-				M A I N	C O N T E N T
-				####################################################
-				-->
-                {% if user.is_authenticated %}
-				<div class="col main">
-					<h2><small> Hi {{current_user.email}} </small></h2>
-					
-					<div class="card-deck">
-						<div class="card">
-							<div class="card-body">
-								<h4 class="card-title">Tasks to be done</h4>
-								<canvas id="wykrLine"></canvas>
-							</div>
+				<!-- sidebar -->
+				
+				<ul class="nav flex-column">
+					<li class="nav-item">
+						<a class="nav-link" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i> Użytkownicy</a>
+					</li>
+					<li class="nav-item dropdown dropdown-tree btn-group">
+						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar" aria-hidden="true"></i> Calendary</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="#">Add task</a>
+							<a class="dropdown-item" href="#">Delete task</a>
 						</div>
-						
-					</div>
-                {% else %}
-                <div class="col main">
-                    <h1 class="display-4">Welcome to Callendary!</h1>
-                    <p class="lead">Please login or sign up to access the website.</p>
-                    
-                  </div>
-                {% endif %}	
-
-					<!--
-					####################################################
-					F O O T E R
-					####################################################
-					-->
-					<footer class="footer py-3">
-						<div class="container-fluid">
-						</div>
-					</footer>
-
-
-				</div>
-			
-
+					</li>
+				</ul>
 			</div>
-			
+			{% endif %}	
 
+			<!--
+			####################################################
+			M A I N	C O N T E N T
+			####################################################
+			-->
+			{% if user.is_authenticated %}
+			<div class="col main">
+				<div class="alert alert-success alert-dismissible fade show" role="alert">
+					Hi <strong>{{current_user.nickname}}</strong>!
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="card-deck">
+					<div class="card">
+						<div class="card-body">
+							<h4 class="card-title">Tasks to be done</h4>
+							<canvas id="wykrLine"></canvas>
+						</div>
+					</div>
+					
+				</div>
+			{% else %}
+			<div class="col main">
+				<h1 class="display-4">Welcome to Callendary!</h1>
+				<p class="lead">Please login or sign up to access the website.</p>
+				
+				</div>
+			{% endif %}	
 
+				<!--
+				####################################################
+				F O O T E R
+				####################################################
+				-->
+				<footer class="footer py-3">
+					<div class="container-fluid">
+					</div>
+				</footer>
+			</div>
 		</div>
-		   
-
-
-
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
-		<script>
-			window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')
-		</script>
-
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
-
-
-	</body>
-     {% endblock %}
+	</div>
+{% endblock %}

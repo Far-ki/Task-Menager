@@ -5,9 +5,21 @@ body {
 
 html, body, .container-fluid {
 	height: 100%;
+/*
+	padding-left: 0px;
+	padding-right: 0px;
+*/
 }
+
+.container-fluid .row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+
 .main {
-	min-height: 100vh;
+	min-height: 92.5vh;
+	padding-top:15px;
 }
 
 
@@ -23,6 +35,7 @@ html, body, .container-fluid {
 }
 
 
+/*
 .sidebar, .main {
 	padding-top:2em;
 }
@@ -31,6 +44,12 @@ html, body, .container-fluid {
 	background-color: #373a3c;
 	border-right: 1px solid #eee;
 	padding:0;
+}
+*/
+
+
+.dropdown-menu {
+	margin-bottom: 5px !important;
 }
 
 .sidebar .nav a {
@@ -142,4 +161,15 @@ html, body, .container-fluid {
 	white-space: nowrap;
 }
 
+
+.login {
+	width: 480px;
+	margin:20px auto;
+	float: none;
+}
+
+.login .card-img-top {
+	height:20vh;
+	object-fit:cover;
+}
 
