@@ -2,6 +2,9 @@ from . import db
 from flask_login import UserMixin,current_user
 from sqlalchemy.sql import func
 from datetime import datetime
+####################################
+from flask import jsonify
+###################################
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,6 +35,21 @@ class Task(db.Model):
             'description': self.description,
             'created_at': self.created_at.isoformat(),
             'completed': self.completed
+        }
+
+#####################################################
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80))
+    start = db.Column(db.DateTime)
+    end = db.Column(db.DateTime)
+
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'start': self.start.isoformat(),
+            'end': self.end.isoformat() if self.end else None
         }
 
     

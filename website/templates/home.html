@@ -38,6 +38,7 @@
 	<div class="card">
 		<div class="card-body">
 			<h4 class="card-title">Tasks to be done</h4>
+
 			<form method="post" action="{{ url_for('task.create_task') }}">
 				<div class="form-group">
 					<label for="name">Name:</label>
@@ -49,23 +50,10 @@
 				</div>
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary">Create</button>
-			
-	<script>
-		$(document).ready(function() {
-		  $('.update-task-btn').click(function() {
-			// get the task ID from the button's data attribute
-			var taskId = $(this).data('task-id');
-	  
-			// set the value of the hidden input in the update form to the task ID
-			$('#updateTaskForm input[name="id"]').val(taskId);
-	  
-			// show the modal
-			$('#updateTaskModal').modal('show');
-		  });
-		});
-	  </script>	</div>
+				</div>
 			</form>
 			{% block new_content %}
+			
 			{% for task in current_user.task %}
 			<div class="task">
 				<div class="task-header">
@@ -76,30 +64,18 @@
 					<h5 class="task-title">{{ task.name }}</h5>
 					<p class="task-description">{{ task.description }}</p>
 				</div>
+				
 				<div class="task-actions">
 					<button type="button" class="btn btn-primary update-task-btn" data-toggle="modal"
 						data-target="#updateTaskModal">Update</button>
 				</div>
+
 				<form action="{{ url_for('task.delete_task') }}" method="POST">
 					<input type="hidden" name="task_id" value="{{ task.id }}">
 					<button type="submit" class="btn btn-danger">Delete</button>
 				</form>
 			
-	<script>
-		$(document).ready(function() {
-		  $('.update-task-btn').click(function() {
-			// get the task ID from the button's data attribute
-			var taskId = $(this).data('task-id');
-	  
-			// set the value of the hidden input in the update form to the task ID
-			$('#updateTaskForm input[name="id"]').val(taskId);
-	  
-			// show the modal
-			$('#updateTaskModal').modal('show');
-		  });
-		});
-	  </script>	<div class="modal fade" id="updateTaskModal" tabindex="-1" role="dialog"
-					aria-labelledby="updateTaskModalLabel" aria-hidden="true">
+				<div class="modal fade" id="updateTaskModal" tabindex="-1" role="dialog" aria-labelledby="updateTaskModalLabel" aria-hidden="true">
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -120,20 +96,7 @@
 									</div>
 									<div class="form-group">
 			
-	<script>
-		$(document).ready(function() {
-		  $('.update-task-btn').click(function() {
-			// get the task ID from the button's data attribute
-			var taskId = $(this).data('task-id');
-	  
-			// set the value of the hidden input in the update form to the task ID
-			$('#updateTaskForm input[name="id"]').val(taskId);
-	  
-			// show the modal
-			$('#updateTaskModal').modal('show');
-		  });
-		});
-	  </script>							<label for="description">Description:</label>
+							<label for="description">Description:</label>
 										<textarea name="description"
 											class="form-control">{{ task.description }}</textarea>
 									</div>
@@ -151,7 +114,7 @@
 				</div>
 				{% endfor %}
 				{% endblock %}
-				<canvas id="wykrLine"></canvas>
+				<!--<canvas id="wykrLine"></canvas>-->
 			</div>
 		</div>
 	</div>
@@ -176,4 +139,18 @@
    </div>
   </div>
  </div>
+ <script>
+	$(document).ready(function() {
+	  $('.update-task-btn').click(function() {
+		// get the task ID from the button's data attribute
+		var taskId = $(this).data('task-id');
+  
+		// set the value of the hidden input in the update form to the task ID
+		$('#updateTaskForm input[name="id"]').val(taskId);
+  
+		// show the modal
+		$('#updateTaskModal').modal('show');
+	  });
+	});
+  </script>
 {% endblock %}

@@ -17,14 +17,16 @@ def create_app():
 
    
 
-    from .models import User,Task
+    from .models import User,Task,Event
     from .views import views
     from .auth import auth
     from .task import task
+    from .event import event
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(task,url_prefix='/')
+    app.register_blueprint(event,url_prefix='/')
     create_database(app)
 
 

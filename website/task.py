@@ -38,3 +38,4 @@ def delete_task():
     except:
         flash('There is no such record','error')
     return redirect(url_for('views.home'))
+

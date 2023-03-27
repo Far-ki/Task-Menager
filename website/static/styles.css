@@ -122,7 +122,7 @@ html, body, .container-fluid {
 	margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
 	.card-deck .card {
 		flex-direction: column;
 		-webkit-box-flex: 1 1 auto; 
@@ -131,6 +131,7 @@ html, body, .container-fluid {
 		flex: 1 1 auto;
 		margin-bottom: 1rem;
 	}
+}
 
 
 .flashes {
@@ -349,4 +350,3 @@ html, body, .container-fluid {
 	height:20vh;
 	object-fit:cover;
 }
-

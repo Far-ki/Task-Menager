@@ -84,3 +84,9 @@ def logout():
 def profile():
     return render_template("profile.html", user=current_user)
 
+
+@auth.route('/calendar')
+@login_required
+def calendar():
+    return render_template("calendar.html", user=current_user)
+
