@@ -32,7 +32,7 @@ def create_group():
     db.session.execute(ins)
     db.session.commit()
 
-    return f'Created group "{group.name}" with code "{group.code}"', 201
+    return redirect(url_for('views.groups'))
 
 
 @group.route('/groups/join', methods=['POST'])

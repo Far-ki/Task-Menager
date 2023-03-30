@@ -16,5 +16,7 @@ def calendar():
 
 @views.route('/groups')
 def groups():
-    return render_template('groups.html',user=current_user)
+    user=current_user
+    user_groups = current_user.groups
+    return render_template('groups.html',user=user,user_groups=user_groups)
 
