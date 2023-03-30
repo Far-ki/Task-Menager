@@ -1,31 +1,5 @@
 {% extends "base.html" %} {% block title %}Callendary Home{% endblock %}
 {% block content %}
-<div>
-	<div>
-
-		<!--
-   ####################################################
-   S I D E B A R
-   ####################################################
-   -->
-		{% if user.is_authenticated %}
-		<div class="col-lg-2 fixed-top bg-white sidebar">
-
-			<!-- sidebar -->
-
-			<ul class="nav flex-column">
-				<a class="nav-link" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i> Dashboard</a>
-				<a class="nav-link" href="/calendar" role="button" aria-haspopup="true" aria-expanded="false"><i
-						class="fa fa-calendar" aria-hidden="true"></i> Calendary</a>
-				<a class="nav-link" href="/tasks" role="button" aria-haspopup="true" aria-expanded="false"><i
-						class="fa fa-calendar" aria-hidden="true"></i> Tasks</a>
-				<a class="nav-link" href="/groups" role="button" aria-haspopup="true" aria-expanded="false"><i
-					class="fa fa-handshake-o" aria-hidden="true"></i> Groups</a>
-			</ul>
-		</div>
-	</div>
-	{% endif %}
-
 	<!--
    ####################################################
    M A I N C O N T E N T
