@@ -1,10 +1,11 @@
-from .models import Group
+from .models import Group,group_membership
 from flask import request,jsonify,Blueprint,redirect,url_for,render_template,flash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 import random
 import string
 group = Blueprint('group', __name__)
+
 
 def generate_group_code(length=6):
         characters = string.ascii_uppercase + string.digits
@@ -23,10 +24,12 @@ def create_group():
         return redirect(url_for('views.groups'))
     group = Group(name=name, code=generate_group_code(),description = description)
 
-    group.members.append(current_user)
-    group.admins.append(current_user)
-
     db.session.add(group)
+    # current_user.groups.append(group)
+
+    db.session.flush()
+    ins = group_membership.insert().values(group_id=group.id, user_id=current_user.id, is_admin=True)
+    db.session.execute(ins)
     db.session.commit()
 
     return f'Created group "{group.name}" with code "{group.code}"', 201
@@ -36,15 +39,18 @@ def create_group():
 @login_required
 def join_group():
     code = request.form.get('code')
-    if not code:
-        return f'Missing group code {code}', 400
     group = Group.query.filter_by(code=code).first()
 
     if not group:
-        return 'Invalid group code', 400
+        flash("Group code doesn't exist", category='error')
+        return redirect(url_for('views.groups'))
 
-    group.members.append(current_user)
+    if group in current_user.groups:
+        flash("You're already in this group", category='error')
+        return redirect(url_for('views.groups'))
 
+    current_user.groups.append(group)
     db.session.commit()
 
-    return f'Joined group "{group.name}" with code "{group.code}"', 200
+    flash(f"You've successfully joined the group '{group.name}'", category='success')
+    return redirect(url_for('views.groups'))

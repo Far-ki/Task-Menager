@@ -9,25 +9,44 @@ from flask import jsonify
 
 
 
-group_admins = db.Table('group_admins',
-                        db.Column('group_id',db.Integer,db.ForeignKey('group.id'),primary_key=True),
-                        db.Column('user_id',db.Integer,db.ForeignKey('user.id'),primary_key=True)
-                        )
-
 group_membership = db.Table('group_membership',
                             db.Column('group_id',db.Integer,db.ForeignKey('group.id'),primary_key=True),
-                            db.Column('user_id',db.Integer,db.ForeignKey('user.id'),primary_key = True)
+                            db.Column('user_id',db.Integer,db.ForeignKey('user.id'),primary_key = True),
+                            db.Column('is_admin', db.Boolean, default=False)
                             )
-
-
-
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     nickname = db.Column(db.String(150), unique=True)
+    groups = db.relationship('Group', secondary=group_membership, backref=db.backref('users', lazy='dynamic'))
     task = db.relationship('Task',backref='user')
+
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    code = db.Column(db.String(50), unique=True)
+    description = db.Column(db.String(200), nullable = True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -45,13 +64,6 @@ class Task(db.Model):
 
 
 
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    code = db.Column(db.String(50), unique=True)
-    description = db.Column(db.String(200), nullable = True)
-    members = db.relationship('User', secondary=group_membership, backref='groups')
-    admins = db.relationship('User', secondary=group_admins, backref='admin_of')
 
     
 
