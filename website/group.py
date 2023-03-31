@@ -54,3 +54,15 @@ def join_group():
 
     flash(f"You've successfully joined the group '{group.name}'", category='success')
     return redirect(url_for('views.groups'))
+
+
+@group.route('groups/leave_group')
+@login_required
+def leave_group():
+    user = current_user
+    group_id = request.args.get('group_id')
+    group = Group.query.filter_by(id=group_id).first()
+    user.groups.remove(group)
+    db.session.commit()
+    flash(f'You have left the group {group.name}', 'success')
+    return redirect(url_for('views.groups'))

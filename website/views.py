@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from . import db
-from .models import User
+from .models import User,Group
 
 views = Blueprint('views',__name__)
 
@@ -20,3 +20,12 @@ def groups():
     user_groups = current_user.groups
     return render_template('groups.html',user=user,user_groups=user_groups)
 
+
+
+
+@views.route('adminPanel')
+@login_required
+def view_admin_panel():
+    group_id = request.args.get('group_id')
+    group = Group.query.get(group_id)
+    return render_template('adminPanel.html',user=current_user, group=group)

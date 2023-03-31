@@ -38,10 +38,13 @@
         <p>{{ group.name }}</p>
       </div>
       <div class="AdminPanel">
-        <button class="AdminSettings">Admin Settings</button>
+        <a class="nav-link" href="{{ url_for('views.view_admin_panel', group_id=group.id) }}"><button class="AdminSettings">Admin Settings</button></a>
       </div>
        <div class="LeaveGROUP">
-        <a class="nav-link" href="/calendar"><button class="leave_group">Leave Group</button></a>
+        <a class="nav-link" href="{{ url_for('group.leave_group', group_id=group.id) }}"><button class="leave_group">Leave Group</button></a>
+      </div>
+      <div class="LeaveGROUP">
+        <a class="nav-link" href="#"><button class="open_group">Open Group</button></a>
       </div>
       </div>
 
