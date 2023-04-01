@@ -1,179 +1,28 @@
-{% extends "base.html" %} {% block title %}Callendary Home{% endblock %} 
+{% extends "base.html" %} {% block title %}Callendary Home{% endblock %}
 {% block content %}
- <div class="">
-  <div class="row">
-
-   <!--
-   ####################################################
-   S I D E B A R
-   ####################################################
-   -->
-   {% if user.is_authenticated %}
-   <div class="col-lg-2 bg-dark sidebar">
-
-    <!-- sidebar -->
-    
-    <ul class="nav flex-column">
-     <li class="nav-item">
-      <a class="nav-link" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i> Użytkownicy</a>
-     </li>
-     <li class="nav-item dropdown dropdown-tree btn-group">
-      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-calendar" aria-hidden="true"></i> Calendary</a>
-      <div class="dropdown-menu">
-       <a class="dropdown-item" href="#">Add task</a>
-       <a class="dropdown-item" href="#">Delete task</a>
-      </div>
-     </li>
-    </ul>
-   </div>
-   {% endif %} 
-
-   <!--
+	<!--
    ####################################################
    M A I N C O N T E N T
    ####################################################
    -->
-   {% if user.is_authenticated %}
-   <div class="card-deck">
-	<div class="card">
-		<div class="card-body">
-			<h4 class="card-title">Tasks to be done</h4>
-			<form method="post" action="{{ url_for('task.create_task') }}">
-				<div class="form-group">
-					<label for="name">Name:</label>
-					<input type="text" id="name" name="name" class="form-control" required>
-				</div>
-				<div class="form-group">
-					<label for="description">Description:</label>
-					<textarea id="description" name="description" class="form-control"></textarea>
-				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-primary">Create</button>
-			
-	<script>
-		$(document).ready(function() {
-		  $('.update-task-btn').click(function() {
-			// get the task ID from the button's data attribute
-			var taskId = $(this).data('task-id');
-	  
-			// set the value of the hidden input in the update form to the task ID
-			$('#updateTaskForm input[name="id"]').val(taskId);
-	  
-			// show the modal
-			$('#updateTaskModal').modal('show');
-		  });
-		});
-	  </script>	</div>
-			</form>
-			{% block new_content %}
-			{% for task in current_user.task %}
-			<div class="task">
-				<div class="task-header">
-					<span class="task-id">#{{ task.id }}</span>
-					<span class="task-date">{{ task.created_at.strftime('%Y-%m-%d') }}</span>
-				</div>
-				<div class="task-body">
-					<h5 class="task-title">{{ task.name }}</h5>
-					<p class="task-description">{{ task.description }}</p>
-				</div>
-				<div class="task-actions">
-					<button type="button" class="btn btn-primary update-task-btn" data-toggle="modal"
-						data-target="#updateTaskModal">Update</button>
-				</div>
-				<form action="{{ url_for('task.delete_task') }}" method="POST">
-					<input type="hidden" name="task_id" value="{{ task.id }}">
-					<button type="submit" class="btn btn-danger">Delete</button>
-				</form>
-			
-	<script>
-		$(document).ready(function() {
-		  $('.update-task-btn').click(function() {
-			// get the task ID from the button's data attribute
-			var taskId = $(this).data('task-id');
-	  
-			// set the value of the hidden input in the update form to the task ID
-			$('#updateTaskForm input[name="id"]').val(taskId);
-	  
-			// show the modal
-			$('#updateTaskModal').modal('show');
-		  });
-		});
-	  </script>	<div class="modal fade" id="updateTaskModal" tabindex="-1" role="dialog"
-					aria-labelledby="updateTaskModalLabel" aria-hidden="true">
-					<div class="modal-dialog" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="updateTaskModalLabel">Update Task</h5>
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form id="updateTaskForm" method="POST"
-									action="{{ url_for('task.update_task') }}">
-									<input type="hidden" name="id" value="{{ task.id }}">
-									<div class="form-group">
-										<label for="name">Name:</label>
-										<input type="text" name="name" class="form-control"
-											value="{{ task.name }}">
-									</div>
-									<div class="form-group">
-			
-	<script>
-		$(document).ready(function() {
-		  $('.update-task-btn').click(function() {
-			// get the task ID from the button's data attribute
-			var taskId = $(this).data('task-id');
-	  
-			// set the value of the hidden input in the update form to the task ID
-			$('#updateTaskForm input[name="id"]').val(taskId);
-	  
-			// show the modal
-			$('#updateTaskModal').modal('show');
-		  });
-		});
-	  </script>							<label for="description">Description:</label>
-										<textarea name="description"
-											class="form-control">{{ task.description }}</textarea>
-									</div>
-									<div class="form-group form-check">
-										<input type="checkbox" class="form-check-input" name="completed"
-											{% if task.completed %}checked{% endif %}>
-										<label class="form-check-label"
-											for="completed">Completed</label>
-									</div>
-									<button type="submit" class="btn btn-primary">Update Task</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				{% endfor %}
-				{% endblock %}
-				<canvas id="wykrLine"></canvas>
-			</div>
-		</div>
+	{% if user.is_authenticated %}
+
+	{% else %}
+	<div class="col main">
+		<h1 class="display-4">Welcome to Callendary!</h1>
+		<p class="lead">Please login or sign up to access the website.</p>
 	</div>
-{% else %}
-<div class="col main">
-	<h1 class="display-4">Welcome to Callendary!</h1>
-	<p class="lead">Please login or sign up to access the website.</p>
-	
-  </div>
-{% endif %}	
+	{% endif %}
 
 
-    <!--
+	<!--
     ####################################################
     F O O T E R
     ####################################################
     -->
-    <footer class="footer py-3">
-     <div class="container-fluid">
-     </div>
-    </footer>
-   </div>
-  </div>
- </div>
+	<footer class="footer py-3">
+		<div class="container-fluid">
+		</div>
+	</footer>
+</div>
 {% endblock %}
