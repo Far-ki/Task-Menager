@@ -6,12 +6,52 @@
    ####################################################
    -->
 	{% if user.is_authenticated %}
-
+	  <div class="row justify-content-center">
+		<div class="col-md-7">
+			<div class="container">
+				<div class="row">
+				  <div class="col-sm">
+					<h4>Personal tasks</h4>
+					<div class="list-group">
+						<a href="#" class="list-group-item list-group-item-action ">
+							<div class="card">
+								<div class="card-header">
+								  <h4>New features</h4>
+								</div>
+								<div class="card-body">
+								  <blockquote class="blockquote mb-0">
+									<p> Add button </p>
+									<footer class="blockquote-footer">Monday 9:30  <small>25/05/2023</small> </footer>
+								  </blockquote>
+								</div>
+							  </div>
+						</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 2</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 3</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 4</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 5</a>
+					  </div>
+				  </div>
+				  <div class="col-sm">
+					<h4>Group tasks</h4>
+					<div class="list-group">
+						<a href="#" class="list-group-item list-group-item-action ">Task 1</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 2</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 3</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 4</a>
+						<a href="#" class="list-group-item list-group-item-action">Task 5</a>
+					  </div>
+				  </div>
+				</div>
+			</div>
+		</div>
+		
+	
 	{% else %}
 	<div class="col main">
 		<h1 class="display-4">Welcome to Callendary!</h1>
 		<p class="lead">Please login or sign up to access the website.</p>
-	</div>
+	</div></div>
 	{% endif %}
 
 
