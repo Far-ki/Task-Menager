@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     nickname = db.Column(db.String(150), unique=True)
     groups = db.relationship('Group', secondary=group_membership, backref=db.backref('users', lazy='dynamic'))
-    task = db.relationship('Task',backref='user')
+    events = db.relationship('Event',backref='user')
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -30,50 +30,14 @@ class Group(db.Model):
     description = db.Column(db.String(200), nullable = True)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    start = db.Column(db.DateTime,nullable = True)
-    end = db.Column(db.DateTime,nullable = True)
-    description = db.Column(db.String(500), nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    completed = db.Column(db.Boolean, default=False, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-
-
-
-
-    
-
-#####################################################
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
     start = db.Column(db.DateTime)
     end = db.Column(db.DateTime)
-
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
+    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
+    
     def as_dict(self):
         return {
             'id': self.id,

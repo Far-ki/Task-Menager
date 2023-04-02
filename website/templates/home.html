@@ -1,5 +1,7 @@
 {% extends "base.html" %} {% block title %}Callendary Home{% endblock %}
 {% block content %}
+
+
 	<!--
    ####################################################
    M A I N C O N T E N T
@@ -13,26 +15,41 @@
 				  <div class="col-sm">
 					<h4>Personal tasks</h4>
 					<div class="list-group">
+
+						{% for event in personalTop5 %}
+						{% if event.start.date() == event.end.date() %}
 						<a href="#" class="list-group-item list-group-item-action ">
 							<div class="card">
 								<div class="card-header">
-								  <h4>New features</h4>
+								  <h4>{{ event.title }}</h4>
 								</div>
 								<div class="card-body">
 								  <blockquote class="blockquote mb-0">
-									<p> Add button </p>
-									<footer class="blockquote-footer">Monday 9:30  <small>25/05/2023</small> </footer>
+									<p> Description placeholder </p>
+									<footer class="footer"> <small> {{ event.start.date() }}, {{ event.start.strftime("%H:%M") }} - {{ event.end.strftime("%H:%M") }}</small> </footer>
 								  </blockquote>
 								</div>
 							  </div>
 						</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 2</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 3</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 4</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 5</a>
+						{% else %}
+						<a href="#" class="list-group-item list-group-item-action ">
+							<div class="card">
+								<div class="card-header">
+								  <h4>{{ event.title }}</h4>
+								</div>
+								<div class="card-body">
+								  <blockquote class="blockquote mb-0">
+									<p> Description placeholder </p>
+									<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{ event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
+								  </blockquote>
+								</div>
+							  </div>
+						</a>
+						{% endif %}
+						{% endfor %}
 					  </div>
 				  </div>
-				  <div class="col-sm">
+				  <div class="col-md-5">
 					<h4>Group tasks</h4>
 					<div class="list-group">
 						<a href="#" class="list-group-item list-group-item-action ">Task 1</a>
@@ -53,6 +70,19 @@
 		<p class="lead">Please login or sign up to access the website.</p>
 	</div></div>
 	{% endif %}
+
+
+	<!--
+    ####################################################
+    F O O T E R
+    ####################################################
+    -->
+	<footer class="footer py-3">
+		<div class="container-fluid">
+		</div>
+	</footer>
+</div>
+
 
 
 	<!--

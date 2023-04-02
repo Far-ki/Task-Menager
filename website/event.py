@@ -6,7 +6,7 @@ event = Blueprint('event', __name__)
 
 @event.route('/events')
 def events():
-    events = Event.query.all()
+    events = Event.query.filter_by(user_id=current_user.id).all()
     return jsonify([event.as_dict() for event in events])
 
 @event.route('/events_add', methods=['POST'])
@@ -16,7 +16,8 @@ def create_event():
     date_to = request.form.get('date_to')
     #description = request.form.get('description')
     #user_id = 'completed' in request.form
-    event = Event(title=event_title, start=date_from,end=date_to)
+    user_id = current_user.id
+    event = Event(title=event_title, start=date_from,end=date_to,user_id=user_id)
     db.session.add(event)
     db.session.commit()
     flash('Task created!')
