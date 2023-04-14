@@ -2,10 +2,8 @@ from . import db
 from flask_login import UserMixin,current_user
 from sqlalchemy.sql import func
 from datetime import datetime
-
-####################################
 from flask import jsonify
-###################################
+
 
 
 

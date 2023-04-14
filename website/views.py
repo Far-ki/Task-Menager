@@ -10,8 +10,11 @@ views = Blueprint('views',__name__)
 
 @views.route('/')
 def home():
-    personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
-    return render_template('home.html',user = current_user,personalTop5=personalTop5)
+    if current_user.is_authenticated:
+        personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+        return render_template('home.html',user = current_user,personalTop5=personalTop5)
+    else:
+        return render_template('home.html',user=current_user)
 
 @views.route('/calendar')
 def calendar():
