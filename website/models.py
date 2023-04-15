@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     nickname = db.Column(db.String(150), unique=True)
-    groups = db.relationship('Group', secondary=group_membership, backref=db.backref('users', lazy='dynamic'))
+    groups = db.relationship('Group', secondary=group_membership, backref=db.backref('user', lazy='dynamic'))
     events = db.relationship('Event',backref='user')
 
 class Group(db.Model):

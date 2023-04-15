@@ -29,9 +29,10 @@ def groups():
 
 
 
-@views.route('adminPanel')
+@views.route('/adminPanel')
 @login_required
 def view_admin_panel():
     group_id = request.args.get('group_id')
     group = Group.query.get(group_id)
-    return render_template('adminPanel.html',user=current_user, group=group)
+    users = group.user.all()
+    return render_template('adminPanel.html',user=current_user, group=group,users = users)
