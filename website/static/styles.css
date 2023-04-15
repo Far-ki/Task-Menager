@@ -77,7 +77,7 @@ html, body, .container-fluid {
 		background-color: #f1f1f1;
 		position: fixed;
 		height: 100%;
-		overflow: auto;
+		/* overflow: auto; */
 		display: block;
 	  }
 	  
@@ -421,8 +421,13 @@ html, body, .container-fluid {
 }
 .BGN
 {
-	font-size: 20px;
+
 	flex:1;
+	font-size: 20px;
+}
+.gname
+{
+	display: inline;
 }
 .LeaveGROUP
 {
