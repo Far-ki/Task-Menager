@@ -8,12 +8,12 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row h-75 justify-content-center">
-    <div class="col-md-6">
+  <div class="row">
+    <div class="col-md-8 col-lg-8 col-xl-9 pr-sm-3 pr-md-0 mb-3">
       <h1>My Calendar</h1>
       <div id='calendar'></div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4 col-lg-4 col-xl-3 mb-3">
       <div class="card">
         <div id="event_op_header" class="card-header">
           Add Event
@@ -57,7 +57,14 @@
                   ></textarea>
                   <p class="font-weight-lighter text-muted"><span id="description-char-count">0</span>/400 characters</p>
               </div>
+              <div class="form-group">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="completed" name="completed" onChange="updateCompleted();">
+                  <label class="form-check-label" for="completed">Completed</label>
+                </div>
+              </div>  
                 <input type="hidden" id="event_id" name="event_id">
+                <input type="hidden" id="is_completed" name="is_completed" value="0">
                 <button type="submit" id="add-event-btn" class="btn btn-primary btn-block mt-5">Add Event</button>
             </form>
             
@@ -95,6 +102,15 @@
         aspectRatio: 2,
         handleWindowResize: false,
 
+
+
+        eventRender: function( event, element ) {
+          if (event.completed == 1){
+            //event.color = 'purple';
+            element.addClass('completed-event');
+          }
+        },
+
         // Add event handler
         dayClick: function(date, jsEvent, view) {
           var start = moment().format('YYYY-MM-DD HH:mm');
@@ -115,6 +131,10 @@
             $("#event_id").val(null);
             $("#event_id2").val(null);
             $("#event_title").val(null);
+            $("#description").val(null);
+            $("#is_completed").val("0");
+            $("#completed").prop('checked', false);
+            $('#description-char-count').text("0");
 
             if (start.format('YYYY-MM-DD') == end.add(-1, 'second').format('YYYY-MM-DD')) {
                 $("#date_from").val(start.add(12, 'hour').format('YYYY-MM-DD HH:mm'));
@@ -135,9 +155,12 @@
             $("#date_from").val(calEvent.start.format('YYYY-MM-DD HH:mm'));
             $("#date_to").val(calEvent.end.format('YYYY-MM-DD HH:mm'));
             $("#description").val(calEvent.description);
+            $("#is_completed").val(calEvent.completed);
+            $("#completed").prop('checked', Boolean(calEvent.completed));
             $("#event_op_header").html("Edit Event");
             $("#add-event-btn").html("Update Event");
             $("#event_add").attr("action", "{{ url_for('event.update_event') }}");
+            $('#description-char-count').text($('#event_title').val().length+1);
             $("#event_del").show();
             //$(this).css('border-color', 'red');
         },
@@ -145,7 +168,7 @@
             if (!confirm("Are you sure about this change?")) {
                 revertFunc();
             } else {
-                $.post("{{ url_for('event.update_event') }}", { event_id: event.id, event_title: event.title, date_from: event.start.format(), date_to: event.end.format() } );
+                $.post("{{ url_for('event.update_event') }}", { event_id: event.id, event_title: event.title, description: event.description, is_completed: event.completed, date_from: event.start.format(), date_to: event.end.format() } );
                 $("#date_from").val(event.start.format('YYYY-MM-DD HH:mm'));
                 $("#date_to").val(event.end.format('YYYY-MM-DD HH:mm'));
             }
@@ -154,7 +177,7 @@
 
 
 
-              // Date and time validation
+      // Date and time validation
       $("#date_from").on("change", function() {
           var datetime = moment($(this).val(), "YYYY-MM-DD HH:mm", true);
           if (!datetime.isValid()) {
@@ -203,5 +226,10 @@
         }
       });
     });
+
+    function updateCompleted(){
+      var isCompleted = document.querySelector('#completed').checked ? 1 : 0;
+      $("#is_completed").val(isCompleted);
+    };
   </script>
 {% endblock %}

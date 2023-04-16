@@ -34,6 +34,7 @@ class Event(db.Model):
     start = db.Column(db.DateTime)
     end = db.Column(db.DateTime)
     description = db.Column(db.String(400))
+    completed = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
     
@@ -43,7 +44,8 @@ class Event(db.Model):
             'title': self.title,
             'start': self.start.isoformat(),
             'end': self.end.isoformat() if self.end else None,
-            'description': self.description
+            'description': self.description,
+            'completed': self.completed
         }
 
 

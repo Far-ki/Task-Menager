@@ -16,6 +16,10 @@ html, body, .container-fluid {
 	margin-right: 0px;
 } */
 
+.row {
+	margin-left: 0px;
+	margin-right: 0px;
+}
 
 .main {
 	min-height: 92.5vh;
@@ -67,37 +71,40 @@ html, body, .container-fluid {
 	top:10px;
 } */
 
-	.sidebar .nav-item, .navbar {
-		border-bottom: none;
-	}
-	.sidebar {
-		margin: 0;
-		padding: 0;
-		/*width: 200px; ##20230416 */
-		width: 130px; /* ##20230416 */
-		background-color: #f1f1f1;
-		position: fixed;
-		height: 100%;
-		overflow: auto;
-		display: block;
-	  }
-	  
-	  .sidebar a {
-		display: block;
-		color: black;
-		padding: 16px;
-		text-decoration: none;
-	  }
-	   
-	  .sidebar a.active {
-		background-color: #04AA6D;
-		color: white;
-	  }
-	  
-	  .sidebar a:hover:not(.active) {
-		background-color: #555;
-		color: white;
-	  }
+.sidebar .nav-item, .navbar {
+	border-bottom: none;
+}
+
+.sidebar {
+	/*
+	margin: 0;
+	width: 200px;
+	position: fixed;
+	overflow: auto;
+	display: block;
+	height: 100%;
+	padding: 0;
+	*/
+	padding-right: 0;
+	background-color: #f1f1f1; 
+  }
+	
+.sidebar a {
+	display: block;
+	color: black;
+	padding: 16px;
+	text-decoration: none;
+}
+
+.sidebar a.active {
+	background-color: #04AA6D;
+	color: white;
+}
+
+.sidebar a:hover:not(.active) {
+	background-color: #555;
+	color: white;
+}
 	  
 	@media screen and (max-width: 900px) {
 		.sidebar {
@@ -443,4 +450,12 @@ html, body, .container-fluid {
 #description + p {
 	margin-top: 3px;
 	font-size: 65%;
+}
+
+nav + .row > .col {
+	min-height: 92vh;
+}
+
+.completed-event {
+	background-color: #04AA6D !important;
 }
