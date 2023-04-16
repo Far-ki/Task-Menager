@@ -77,7 +77,11 @@ def logout():
     return redirect(url_for('views.home'))
 
 
-
+@auth.route('/fake_profile/<int:user_id>')
+@login_required
+def fake_profile(user_id):
+    user = User.query.get(user_id)
+    return render_template("fake_profile.html",user = user)
 
 @auth.route('/profile')
 @login_required
