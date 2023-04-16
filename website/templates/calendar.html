@@ -47,6 +47,16 @@
                         placeholder="Date to"
                     />
                 </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea
+                      class="form-control"
+                      id="description"
+                      name="description"
+                      placeholder="Your description"
+                  ></textarea>
+                  <p class="font-weight-lighter text-muted"><span id="description-char-count">0</span>/400 characters</p>
+              </div>
                 <input type="hidden" id="event_id" name="event_id">
                 <button type="submit" id="add-event-btn" class="btn btn-primary btn-block mt-5">Add Event</button>
             </form>
@@ -87,11 +97,9 @@
 
         // Add event handler
         dayClick: function(date, jsEvent, view) {
-          //var start = moment(date).format();
-          //var end = moment(date).add(1, 'hour').format();
           var start = moment().format('YYYY-MM-DD HH:mm');
           var end = moment().add(1, 'hour').format('YYYY-MM-DD HH:mm');
-          var title = "" //prompt('Event Title:');
+          var title = ""
           if (title) {
             var eventData = {
               title: title,
@@ -126,6 +134,7 @@
             $("#event_title").val(calEvent.title);
             $("#date_from").val(calEvent.start.format('YYYY-MM-DD HH:mm'));
             $("#date_to").val(calEvent.end.format('YYYY-MM-DD HH:mm'));
+            $("#description").val(calEvent.description);
             $("#event_op_header").html("Edit Event");
             $("#add-event-btn").html("Update Event");
             $("#event_add").attr("action", "{{ url_for('event.update_event') }}");
@@ -145,14 +154,28 @@
 
 
 
+              // Date and time validation
+      $("#date_from").on("change", function() {
+          var datetime = moment($(this).val(), "YYYY-MM-DD HH:mm", true);
+          if (!datetime.isValid()) {
+              $(this).val("");
+              alert("Invalid date and time. Please enter a valid date and time in the format YYYY-MM-DD HH:mm.");
+          }
+      });
 
+      $("#date_to").on("change", function() {
+          var datetime = moment($(this).val(), "YYYY-MM-DD HH:mm", true);
+          if (!datetime.isValid()) {
+              $(this).val("");
+              alert("Invalid date and time. Please enter a valid date and time in the format YYYY-MM-DD HH:mm.");
+          }
+      });
 
       // Button click handler
       $('#add-event-btn').click(function() {
         var start = moment().startOf('day');
         var end = moment().startOf('day').add(1, 'hour');
-        var title = $("#event_title").val;//prompt('Event Title:');
-        //var title = prompt('Event Title:');
+        var title = $("#event_title").val;
         if (title) {
           var eventData = {
             title: title,
@@ -160,6 +183,23 @@
             end: end
           };
           calendar.fullCalendar('renderEvent', eventData, true);
+        }
+      });
+
+      // Form input limitations
+      $('#description').on('input', function() {
+        var charCount = $(this).val().length;
+        $('#description-char-count').text(charCount);
+        if (charCount > 400) {
+          $(this).val($(this).val().substring(0, 400));
+          $('#description-char-count').text(400);
+        }
+      });
+
+      $('#event_title').on('input', function() {
+        var charCount = $(this).val().length;
+        if (charCount > 80) {
+          $(this).val($(this).val().substring(0, 80));
         }
       });
     });

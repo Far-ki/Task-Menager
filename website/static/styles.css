@@ -73,7 +73,8 @@ html, body, .container-fluid {
 	.sidebar {
 		margin: 0;
 		padding: 0;
-		width: 200px;
+		/*width: 200px; ##20230416 */
+		width: 130px; /* ##20230416 */
 		background-color: #f1f1f1;
 		position: fixed;
 		height: 100%;
@@ -433,4 +434,13 @@ html, body, .container-fluid {
 {
 	text-align: center;
 	flex:2;
+}
+
+#description {
+	height: 150px;
+}
+
+#description + p {
+	margin-top: 3px;
+	font-size: 65%;
 }
