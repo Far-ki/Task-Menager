@@ -64,5 +64,10 @@ def leave_group():
     group = Group.query.filter_by(id=group_id).first()
     user.groups.remove(group)
     db.session.commit()
+
+    if group.user.count() == 0:
+         db.session.delete(group)
+         db.session.commit()
+         
     flash(f'You have left the group {group.name}', 'success')
     return redirect(url_for('views.groups'))

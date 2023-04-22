@@ -8,6 +8,7 @@ html, body, .container-fluid {
 
 	padding-left: 0px;
 	padding-right: 0px;
+	
 
 }
 
@@ -73,7 +74,7 @@ html, body, .container-fluid {
 	.sidebar {
 		margin: 0;
 		padding: 0;
-		width: 200px;
+		width: 150px;
 		background-color: #f1f1f1;
 		position: fixed;
 		height: 100%;
@@ -98,7 +99,7 @@ html, body, .container-fluid {
 		color: white;
 	  }
 	  
-	@media screen and (max-width: 900px) {
+	@media screen and (max-width: 1000px) {
 		.sidebar {
 		  width: 100%;
 		  height: auto;
@@ -421,8 +422,13 @@ html, body, .container-fluid {
 }
 .BGN
 {
-	font-size: 20px;
+
 	flex:1;
+	font-size: 20px;
+}
+.gname
+{
+	display: inline;
 }
 .LeaveGROUP
 {
@@ -433,4 +439,15 @@ html, body, .container-fluid {
 {
 	text-align: center;
 	flex:2;
+}
+
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .button-wrapper {
+    margin-bottom: 8px;
+	align-items: right;
 }

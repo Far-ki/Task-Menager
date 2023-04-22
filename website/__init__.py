@@ -22,11 +22,12 @@ def create_app():
     from .auth import auth
     from .event import event
     from .group import group
-
+    from .panel import panel
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(event,url_prefix='/')
     app.register_blueprint(group,url_prefix='/')
+    app.register_blueprint(panel,url_prefix='/')
     create_database(app)
 
 
@@ -34,7 +35,7 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
-    
+
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))

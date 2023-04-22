@@ -3,165 +3,155 @@
 {% block title %}My Calendar{% endblock %}
 
 {% block styles %}
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' />
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' />
 
 {% endblock %}
 
 {% block content %}
-  <div class="row h-75 justify-content-center">
-    <div class="col-md-6">
-      <h1>My Calendar</h1>
-      <div id='calendar'></div>
-    </div>
-    <div class="col-md-3">
-      <div class="card">
-        <div id="event_op_header" class="card-header">
-          Add Event
-        </div>
-        <div class="card-body">
-            <form id="event_add" method="post" action="{{ url_for('event.create_event') }}">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input
-                        class="form-control"
-                        id="event_title"
-                        name="event_title"
-                        placeholder="Event title"
-                    />
-                </div>          
-                <div class="form-group">
-                    <label>Date start</label>
-                    <input
-                        class="form-control"
-                        id="date_from"
-                        name="date_from"
-                        placeholder="Date from"
-                    />
-                </div>
-                <div class="form-group">
-                    <label>Date end</label>
-                    <input
-                        class="form-control"
-                        id="date_to"
-                        name="date_to"
-                        placeholder="Date to"
-                    />
-                </div>
-                <input type="hidden" id="event_id" name="event_id">
-                <button type="submit" id="add-event-btn" class="btn btn-primary btn-block mt-5">Add Event</button>
-            </form>
-            
-            <form id="event_del" class="mt-3" style="display: none;" method="post" action="{{ url_for('event.delete_event') }}">
-                <input type="hidden" id="event_id2" name="event_id">
-                <button type="submit" id="del-event-btn" class="btn btn-danger btn-block">Delete Event</button>
-            </form>
-        </div>
+<div class="row h-75 justify-content-center">
+  <div class="col-md-6">
+    <h1>My Calendar</h1>
+    <div id='calendar'></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card">
+      <div id="event_op_header" class="card-header">
+        Add Event
+      </div>
+      <div class="card-body">
+        <form id="event_add" method="post" action="{{ url_for('event.create_event') }}">
+          <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" id="event_title" name="event_title" placeholder="Event title" />
+          </div>
+          <div class="form-group">
+            <label>Date start</label>
+            <input class="form-control" id="date_from" name="date_from" placeholder="Date from" />
+          </div>
+          <div class="form-group">
+            <label>Date end</label>
+            <input class="form-control" id="date_to" name="date_to" placeholder="Date to" />
+          </div>
+          <div class="form-group">
+            <label>Group id</label>
+            <input class="form-control" id="date_to" name="Group_id" placeholder="Group id" />
+          </div>
+          <input type="hidden" id="event_id" name="event_id">
+          <button type="submit" id="add-event-btn" class="btn btn-primary btn-block mt-5">Add Event</button>
+        </form>
+
+        <form id="event_del" class="mt-3" style="display: none;" method="post"
+          action="{{ url_for('event.delete_event') }}">
+          <input type="hidden" id="event_id2" name="event_id">
+          <button type="submit" id="del-event-btn" class="btn btn-danger btn-block">Delete Event</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js'></script>
 
-  <script>
-    $(document).ready(function() {
-      var calendar = $('#calendar').fullCalendar({
-        header: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'month,agendaWeek,agendaDay'
-        },
-        defaultView: 'month',
-        editable: true,
-        events: '/events',
-        selectable: true,
-        height: 'parent',
-        themeSystem: 'bootstrap4',
-        height: 'parent',
-        themeSystem: 'bootstrap4',
-        aspectRatio: 2,
-        handleWindowResize: false,
+<script>
+  $(document).ready(function () {
+    var calendar = $('#calendar').fullCalendar({
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      defaultView: 'month',
+      editable: true,
+      events: '/events',
+      selectable: true,
+      height: 'parent',
+      themeSystem: 'bootstrap4',
+      height: 'parent',
+      themeSystem: 'bootstrap4',
+      aspectRatio: 2,
+      handleWindowResize: false,
 
-        // Add event handler
-        dayClick: function(date, jsEvent, view) {
-          //var start = moment(date).format();
-          //var end = moment(date).add(1, 'hour').format();
-          var start = moment().format('YYYY-MM-DD HH:mm');
-          var end = moment().add(1, 'hour').format('YYYY-MM-DD HH:mm');
-          var title = "" //prompt('Event Title:');
-          if (title) {
-            var eventData = {
-              title: title,
-              start: start,
-              end: end
-            };
-            //calendar.fullCalendar('renderEvent', eventData, true);
-          }
-        },
-        select: function(startDate, endDate) {
-            var start = startDate;
-            var end = endDate;
-            $("#event_id").val(null);
-            $("#event_id2").val(null);
-            $("#event_title").val(null);
-
-            if (start.format('YYYY-MM-DD') == end.add(-1, 'second').format('YYYY-MM-DD')) {
-                $("#date_from").val(start.add(12, 'hour').format('YYYY-MM-DD HH:mm'));
-                $("#date_to").val(start.add(30, 'minute').format('YYYY-MM-DD HH:mm'));
-            } else {
-                $("#date_from").val(startDate.format('YYYY-MM-DD HH:mm'));
-                $("#date_to").val(endDate.format('YYYY-MM-DD HH:mm'));
-            }
-            $("#event_op_header").html("Add Event");
-            $("#add-event-btn").html("Add Event");
-            $("#event_add").attr("action", "{{ url_for('event.create_event') }}");
-            $("#event_del").hide();
-        },
-        eventClick: function(calEvent, jsEvent, view) {
-            $("#event_id").val(calEvent.id);
-            $("#event_id2").val(calEvent.id);
-            $("#event_title").val(calEvent.title);
-            $("#date_from").val(calEvent.start.format('YYYY-MM-DD HH:mm'));
-            $("#date_to").val(calEvent.end.format('YYYY-MM-DD HH:mm'));
-            $("#event_op_header").html("Edit Event");
-            $("#add-event-btn").html("Update Event");
-            $("#event_add").attr("action", "{{ url_for('event.update_event') }}");
-            $("#event_del").show();
-            //$(this).css('border-color', 'red');
-        },
-        eventDrop: function(event, delta, revertFunc) {
-            if (!confirm("Are you sure about this change?")) {
-                revertFunc();
-            } else {
-                $.post("{{ url_for('event.update_event') }}", { event_id: event.id, event_title: event.title, date_from: event.start.format(), date_to: event.end.format() } );
-                $("#date_from").val(event.start.format('YYYY-MM-DD HH:mm'));
-                $("#date_to").val(event.end.format('YYYY-MM-DD HH:mm'));
-            }
-        }
-      });
-
-
-
-
-
-      // Button click handler
-      $('#add-event-btn').click(function() {
-        var start = moment().startOf('day');
-        var end = moment().startOf('day').add(1, 'hour');
-        var title = $("#event_title").val;//prompt('Event Title:');
-        //var title = prompt('Event Title:');
+      // Add event handler
+      dayClick: function (date, jsEvent, view) {
+        //var start = moment(date).format();
+        //var end = moment(date).add(1, 'hour').format();
+        var start = moment().format('YYYY-MM-DD HH:mm');
+        var end = moment().add(1, 'hour').format('YYYY-MM-DD HH:mm');
+        var title = "" //prompt('Event Title:');
         if (title) {
           var eventData = {
             title: title,
             start: start,
             end: end
           };
-          calendar.fullCalendar('renderEvent', eventData, true);
+          //calendar.fullCalendar('renderEvent', eventData, true);
         }
-      });
+      },
+      select: function (startDate, endDate) {
+        var start = startDate;
+        var end = endDate;
+        $("#event_id").val(null);
+        $("#event_id2").val(null);
+        $("#event_title").val(null);
+
+        if (start.format('YYYY-MM-DD') == end.add(-1, 'second').format('YYYY-MM-DD')) {
+          $("#date_from").val(start.add(12, 'hour').format('YYYY-MM-DD HH:mm'));
+          $("#date_to").val(start.add(30, 'minute').format('YYYY-MM-DD HH:mm'));
+        } else {
+          $("#date_from").val(startDate.format('YYYY-MM-DD HH:mm'));
+          $("#date_to").val(endDate.format('YYYY-MM-DD HH:mm'));
+        }
+        $("#event_op_header").html("Add Event");
+        $("#add-event-btn").html("Add Event");
+        $("#event_add").attr("action", "{{ url_for('event.create_event') }}");
+        $("#event_del").hide();
+      },
+      eventClick: function (calEvent, jsEvent, view) {
+        $("#event_id").val(calEvent.id);
+        $("#event_id2").val(calEvent.id);
+        $("#event_title").val(calEvent.title);
+        $("#date_from").val(calEvent.start.format('YYYY-MM-DD HH:mm'));
+        $("#date_to").val(calEvent.end.format('YYYY-MM-DD HH:mm'));
+        $("#event_op_header").html("Edit Event");
+        $("#add-event-btn").html("Update Event");
+        $("#event_add").attr("action", "{{ url_for('event.update_event') }}");
+        $("#event_del").show();
+        //$(this).css('border-color', 'red');
+      },
+      eventDrop: function (event, delta, revertFunc) {
+        if (!confirm("Are you sure about this change?")) {
+          revertFunc();
+        } else {
+          $.post("{{ url_for('event.update_event') }}", { event_id: event.id, event_title: event.title, date_from: event.start.format(), date_to: event.end.format() });
+          $("#date_from").val(event.start.format('YYYY-MM-DD HH:mm'));
+          $("#date_to").val(event.end.format('YYYY-MM-DD HH:mm'));
+        }
+      }
     });
-  </script>
+
+
+
+
+
+    // Button click handler
+    $('#add-event-btn').click(function () {
+      var start = moment().startOf('day');
+      var end = moment().startOf('day').add(1, 'hour');
+      var title = $("#event_title").val;//prompt('Event Title:');
+      //var title = prompt('Event Title:');
+      if (title) {
+        var eventData = {
+          title: title,
+          start: start,
+          end: end
+        };
+        calendar.fullCalendar('renderEvent', eventData, true);
+      }
+    });
+  });
+</script>
 {% endblock %}
