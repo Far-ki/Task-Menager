@@ -14,10 +14,14 @@ def create_event():
     event_title = request.form.get('event_title')
     date_from = request.form.get('date_from')
     date_to = request.form.get('date_to')
-    #description = request.form.get('description')
-    #user_id = 'completed' in request.form
     user_id = current_user.id
-    event = Event(title=event_title, start=date_from,end=date_to,user_id=user_id)
+    group_id = request.form.get('Group_id')
+    
+    if group_id:
+        event = Event(title=event_title, start=date_from, end=date_to, user_id=user_id, group_id=group_id)
+    else:
+        event = Event(title=event_title, start=date_from, end=date_to, user_id=user_id)
+        
     db.session.add(event)
     db.session.commit()
     flash('Task created!')

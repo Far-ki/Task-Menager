@@ -26,6 +26,7 @@ class Group(db.Model):
     name = db.Column(db.String(100))
     code = db.Column(db.String(50), unique=True)
     description = db.Column(db.String(200), nullable = True)
+    events = db.relationship('Event', backref='group', lazy=True)
 
 
 class Event(db.Model):
