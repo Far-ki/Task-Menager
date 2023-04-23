@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy import asc
 from . import db
-from .models import User,Group,Event
+from .models import User,Group,Event,group_membership
 from datetime import datetime
 
 views = Blueprint('views',__name__)
