@@ -449,7 +449,17 @@ html, body, .container-fluid {
   
   .button-wrapper {
     margin-bottom: 8px;
-	align-items: right;
+}
+
+
+.lista_osob
+{
+	width: 150px;
+}
+.sss
+{
+	display: flex;
+	flex-direction: row;
 }
 
 .container
@@ -482,3 +492,4 @@ hr {
 	text-transform: uppercase;
   }
   
+
