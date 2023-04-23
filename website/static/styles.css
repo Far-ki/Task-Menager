@@ -1,6 +1,6 @@
 
 body {
-	background:#F5F5F5;
+	background:#f5f5f5;
 }
 
 html, body, .container-fluid {
@@ -451,3 +451,34 @@ html, body, .container-fluid {
     margin-bottom: 8px;
 	align-items: right;
 }
+
+.container
+{
+	margin-top: 18px;
+	padding:30px 20px 20px;
+	background-color: white;
+	position: relative;
+}
+.status
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	
+}
+hr {
+	border: none;
+	height: 1px;
+	background-color: #d3d3d3;
+	margin: 20px 0;
+	padding: 0;
+  }
+
+  h4 {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 3rem;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+  }
+  
