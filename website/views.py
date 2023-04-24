@@ -4,6 +4,8 @@ from sqlalchemy import asc
 from . import db
 from .models import User,Group,Event
 from datetime import datetime
+from flask import jsonify
+import json
 
 views = Blueprint('views',__name__)
 
@@ -35,4 +37,9 @@ def view_admin_panel():
     group_id = request.args.get('group_id')
     group = Group.query.get(group_id)
     users = group.user.all()
-    return render_template('adminPanel.html',user=current_user, group=group,users = users)
+    events = Event.query.filter_by(group_id=group_id).all()
+    event_user = db.session.query(User.nickname, Event.title, Event.id).join(User.events).filter(Event.group_id == group_id).all()
+    event_user_data = [{"nickname": result.nickname, "title": result.title, "id": result.id} for result in event_user]
+
+    return render_template('adminPanel.html',user=current_user, group=group,users = users, events = events, event_user=event_user_data)
+

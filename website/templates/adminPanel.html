@@ -3,7 +3,8 @@
 
 <div class="container-fluid">
 
-  <div class="row">
+  <!--KOD GRUPY-->
+  <div class="row text-center">
     <div class="col-md-4 offset-md-4">
       <div class="card">
         <div class="card-header">
@@ -13,9 +14,38 @@
           <h5 class="card-title">{{ group.code }}</h5>
         </div>
       </div>
+
+
+      <!--LISTA EVENTÓW-->
+      <div class="card">
+        <div class="card-header">
+          Events:
+        </div>
+        <div class="card-body">
+          {% for event in events %}
+          <div class="button-wrapper">
+            <button class="btn btn-secondary event-button" data-title="{{ event.title }}" data-id="{{ event.id }}" data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title }}</a></button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!--LISTA USERÓW W DANEJ GRUPIE-->
+      <div class="card">
+        <div class="card-header">
+          Group members:
+        </div>
+        <div class="card-body">
+          {% for user in users %}
+          <div class="button-wrapper">
+            <button class="btn btn-secondary user-button"><a class="nav-link" >{{ user.nickname }}</a></button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
 
-    
+    <!--
     <div class="col-md-3 offset-md-1 d-flex justify-content-end align-items-center">
       <div class="button-container">
         {% for user in users %}
@@ -26,10 +56,99 @@
         </div>
         {% endfor %}
       </div>
+    </div>
+    -->
 
+    <!--MODAL DO EVENTU-->
+    <div class="modal fade" id="event-popup" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title mx-auto"></h5>
+          </div>
+          <div class="modal-body">
+            <p><span class="event-start"></span> - <span class="event-end"></span></p>
+            <div class="row">
+              <div class="col-6">
+                <h6>All users:</h6>
+                <ul class="list-group list-group-flush overflow-auto">
+                {% for user in users %}
+                  <li class="list-group-item">{{ user.nickname }}</li>
+                {% endfor %}
+                </ul>
+              </div>
+              <div class="col-6">
+                <h6>Users assigned to task:</h6>
+                <ul class="list-group list-group-flush overflow-auto event-users"></ul>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!--MODAL DO USERA-->
+    <div class="modal fade" id="user-popup" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">User details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
     </div>
 
 
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+  $(document).ready(function() {
+    $('.event-button').click(function() {
+      var title = $(this).data('title');
+      var id = $(this).data('id');
+      var start = $(this).data('start');
+      var end = $(this).data('end');
+      var event_users_data = jQuery.parseJSON(`{{ event_user|tojson }}`);
+      var event_users = $.grep(event_users_data, function(item) {
+        return item.id === id;
+      });
+      var innerhtml = '';
+      $('#event-popup .modal-title').text(title);
+      $('#event-popup .event-id').text(id);
+      $('#event-popup .event-start').text(start);
+      $('#event-popup .event-end').text(end);
+      $('#event-popup').modal('show');
+
+      for (var i = 0; i < event_users.length; ++i) {
+        //console.log(event_users[i].nickname);
+        innerhtml = innerhtml + '<li class="list-group-item">' + event_users[i].nickname + '</li>';
+      }
+      $('#event-popup .event-users').html(innerhtml);
+    });
+  });
+
+
+  $(document).ready(function() {
+    $('.user-button').click(function() {
+      $('#user-popup').modal('show');
+    });
+  });
+</script>
+
 {% endblock %}
