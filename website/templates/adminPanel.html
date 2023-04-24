@@ -19,7 +19,7 @@
     <div class="col-md-3 offset-md-1 d-flex justify-content-end align-items-center">
       <div class="button-container">
         {% for user in users %}
-
+        {% if poss_admin.is_admin %}
         <div class="sss">
           <form action="{{ url_for('panel.kick_out_of_group') }}" method="POST">
             <input type="hidden" name="member_id" value="{{ user.id }}">
@@ -31,6 +31,7 @@
             <input type="hidden" name="some_id" value="{{ group.id }}">
             <button type="submit">Admin</button>
           </form>
+        {% endif %}
         </div>
         <div class="button-wrapper">
           <button class="lista_osob"><a class="nav-link"

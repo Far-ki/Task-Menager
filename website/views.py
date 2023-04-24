@@ -35,4 +35,6 @@ def view_admin_panel():
     group_id = request.args.get('group_id')
     group = Group.query.get(group_id)
     users = group.user.all()
-    return render_template('adminPanel.html',user=current_user, group=group,users = users)
+    my_id = current_user.id
+    poss_admin = db.session.query(group_membership).filter_by(user_id=my_id).first()
+    return render_template('adminPanel.html',user=current_user, group=group,users = users, poss_admin = poss_admin)

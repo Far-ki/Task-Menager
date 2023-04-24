@@ -41,7 +41,6 @@ def make_admin():
     user_id = request.form.get("member_id")
     group_id = request.form.get("some_id")
     # flash(f'user id: {user_id} , group id: {group_id}')
-
     user = User.query.filter_by(id=user_id).first()
     group = Group.query.filter_by(id=group_id).first()
 
