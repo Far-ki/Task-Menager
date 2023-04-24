@@ -13,13 +13,18 @@ group_membership = db.Table('group_membership',
                             db.Column('is_admin', db.Boolean, default=False)
                             )
 
+event_user = db.Table('event_user',
+                       db.Column('event_id',db.Integer,db.ForeignKey('event.id'),primary_key=True),
+                       db.Column('user_id',db.Integer,db.ForeignKey('user.id'),primary_key = True)
+                    )
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     nickname = db.Column(db.String(150), unique=True)
     groups = db.relationship('Group', secondary=group_membership, backref=db.backref('user', lazy='dynamic'))
-    events = db.relationship('Event',backref='user')
+    events = db.relationship('Event', secondary=event_user, backref=db.backref('user_events', lazy='dynamic'))
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
