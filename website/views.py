@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy import asc
 from . import db
-from .models import User,Group,Event
+from .models import User,Group,Event,group_membership
 from datetime import datetime
 from flask import jsonify
 import json
@@ -40,6 +40,7 @@ def view_admin_panel():
     events = Event.query.filter_by(group_id=group_id).all()
     event_user = db.session.query(User.nickname, Event.title, Event.id).join(User.events).filter(Event.group_id == group_id).all()
     event_user_data = [{"nickname": result.nickname, "title": result.title, "id": result.id} for result in event_user]
-
-    return render_template('adminPanel.html',user=current_user, group=group,users = users, events = events, event_user=event_user_data)
+    my_id = current_user.id
+    poss_admin = db.session.query(group_membership).filter_by(user_id=my_id).first()
+    return render_template('adminPanel.html',user=current_user, group=group,users = users, events = events, event_user=event_user_data,poss_admin = poss_admin)
 

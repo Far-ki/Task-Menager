@@ -41,7 +41,8 @@ class Event(db.Model):
     end = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
-    
+    # is_completed = db.Column(db.Boolean, default = False) 
+
     def as_dict(self):
         return {
             'id': self.id,
