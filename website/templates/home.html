@@ -2,104 +2,148 @@
 {% block content %}
 
 
-	<!--
+<!--
    ####################################################
    M A I N C O N T E N T
    ####################################################
    -->
-	{% if user.is_authenticated %}
-		<div class="container">
-			<h3>Overdue Tasks: 0</h3>
-					<div class="row">
-						<div class="col-md-4">
-						<span>Title</span>
-						</div>
-
-						<div class="col-md-2">
-						<span>Assigned to</span>
-						</div>
-						<div class="col-md-2">
-							<span>Est. Hours</span>
-						</div>
-							<div class="col-md-2">
-							<span>Status</span>
-						</div>
-						<div class="col-md-2">
-							<span>Progress</span>
-						</div>
-							
-							
-							<div class="status">
-								<span class="badge badge-pill badge-success">In Progress</span>
-								<span class="badge badge-pill badge-danger">New</span>
-								<span class="badge badge-pill badge-warning">Closed</span>
-								<span class="badge badge-pill badge-info">Resolved</span>
-							</div>
-						
-					</div>
-					<hr>
-					<table class="table table-hover">
-						<div class="row">
-
-							
-
-							<div class="col-md-4">
-								{% for event in personalTop5 %}
-								{% if event.start.date() == event.end.date() %}
-									<h5>{{ event.title }}</h5>
-									<blockquote class="blockquote mb-4">
-										<p><small>Description placeholder.</small></p>
-										<footer class="footer"> <small> {{ event.start.date() }}, {{ event.start.strftime("%H:%M") }} - {{ event.end.strftime("%H:%M") }}</small> </footer>
-									</blockquote>
-								{% else %}
-									<h4>{{ event.title }}</h4>
-									<blockquote class="blockquote mb-4">
-										<span>Description placeholder.</span>
-										<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{ event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
-									</blockquote>
-								{% endif %}
-								{% endfor %}
-							</div>
-							<div class="col-md-2">
-								<span>User</span>
-							</div>
-							<div class="col-md-2">
-								<span>5H</span> 
-							</div>
-							<div class="col-md-2">
-								<span><span class="badge badge-pill badge-success">In Progress</span></span> 
-							</div>
-							<div class="col-md-2">
-									<div class="progress" style="height: 20px;">
-									<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
-								  </div>
-							</div>
-							
-								
-							
-							
-						</div>
-					</div>
-				</table>
-			
+{% if user.is_authenticated %}
+<div class="container">
+	<h3>Overdue Tasks: 0</h3>
+	<div class="row">
+		<div class="col-md-4">
+			<span>Title</span>
 		</div>
-	
-	{% else %}
-	<div class="col main">
-		<h1 class="display-4">Welcome to Callendary!</h1>
-		<p class="lead">Please login or sign up to access the website.</p>
-	</div></div>
-	{% endif %}
+
+		<div class="col-md-2">
+			<span>Assigned to</span>
+		</div>
+		<div class="col-md-2">
+			<span>Est. Hours</span>
+		</div>
+		<div class="col-md-2">
+			<span>Status</span>
+		</div>
+		<div class="col-md-2">
+			<span>Progress</span>
+		</div>
 
 
-	<!--
+		<div class="status">
+			<span class="badge badge-pill badge-success">In Progress</span>
+			<span class="badge badge-pill badge-danger">New</span>
+			<span class="badge badge-pill badge-warning">Closed</span>
+			<span class="badge badge-pill badge-info">Resolved</span>
+		</div>
+
+	</div>
+	<hr>
+	<table class="table table-hover">
+		<div class="row">
+
+
+
+			<div class="col-md-4">
+				{% for event in personalTop5 %}
+				{% if event.start.date() == event.end.date() %}
+				<h5>{{ event.title }}</h5>
+				<blockquote class="blockquote mb-4">
+
+					<button type="button" class="btn btn-primary" data-toggle="modal"
+						data-target="#createSubtaskModal{{ event.id }}" data-eventid="{{ event.id }}">Create
+						Subtask</button>
+
+					<div class="modal fade" id="createSubtaskModal{{ event.id }}" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Create Subtask</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form method="POST" action="{{ url_for('event.create_subtask')}}">
+										<input type="hidden" name="event_id" value="{{ event.id }}">
+
+										<div class="form-group">
+											<label for="subtask-title" class="col-form-label">Title:</label>
+											<input type="text" class="form-control" id="subtask-title"
+												name="subtask-title">
+										</div>
+										<div class="form-group">
+											<label for="subtask-description" class="col-form-label">Description:</label>
+											<textarea class="form-control" id="subtask-description"
+												name="subtask-description"></textarea>
+										</div>
+										<button type="submit" class="btn btn-primary">Create</button>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<p><small>Description placeholder.</small></p>
+					<footer class="footer"><small>{{ event.start.date() }}, {{ event.start.strftime("%H:%M") }} - {{
+							event.end.strftime("%H:%M") }}</small></footer>
+				</blockquote>
+				{% else %}
+				<h4>{{ event.title }}</h4>
+				<blockquote class="blockquote mb-4">
+					<span>Description placeholder.</span>
+					<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{
+							event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
+				</blockquote>
+				{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-md-2">
+				<span>User</span>
+			</div>
+			<div class="col-md-2">
+				<span>5H</span>
+			</div>
+			<div class="col-md-2">
+				<span><span class="badge badge-pill badge-success">In Progress</span></span>
+			</div>
+			<div class="col-md-2">
+				<div class="progress" style="height: 20px;">
+					<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25"
+						aria-valuemin="0" aria-valuemax="100">25%</div>
+				</div>
+			</div>
+
+
+
+
+		</div>
+</div>
+</table>
+
+</div>
+
+{% else %}
+<div class="col main">
+	<h1 class="display-4">Welcome to Callendary!</h1>
+	<p class="lead">Please login or sign up to access the website.</p>
+</div>
+</div>
+{% endif %}
+
+
+<!--
     ####################################################
     F O O T E R
     ####################################################
     -->
-	<footer class="footer py-3">
-		<div class="container-fluid">
-		</div>
-	</footer>
+<footer class="footer py-3">
+	<div class="container-fluid">
+	</div>
+</footer>
 </div>
 {% endblock %}
