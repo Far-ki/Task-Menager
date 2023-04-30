@@ -42,6 +42,7 @@ class Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
     is_completed = db.Column(db.Boolean, default = False)
+    
     def as_dict(self):
         return {
             'id': self.id,
@@ -50,6 +51,7 @@ class Event(db.Model):
             'end': self.end.isoformat() if self.end else None,
             'Completed': self.is_completed
         }
+
 class Subtask(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))

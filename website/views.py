@@ -13,8 +13,11 @@ views = Blueprint('views',__name__)
 @views.route('/')
 def home():
     if current_user.is_authenticated:
+        subtasks = {}
         personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
-        return render_template('home.html',user = current_user,personalTop5=personalTop5)
+        for event in personalTop5:
+            subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).all()
+        return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks)
     else:
         return render_template('home.html',user=current_user)
 

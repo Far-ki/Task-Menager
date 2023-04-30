@@ -92,6 +92,11 @@
 					<footer class="footer"><small>{{ event.start.date() }}, {{ event.start.strftime("%H:%M") }} - {{
 							event.end.strftime("%H:%M") }}</small></footer>
 				</blockquote>
+			    <ul>
+					{% for subtask in subtasks[event.id] %}
+						<li>{{ subtask.title }}</li>
+					{% endfor %}
+				</ul>
 				{% else %}
 				<h4>{{ event.title }}</h4>
 				<blockquote class="blockquote mb-4">
