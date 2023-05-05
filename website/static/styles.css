@@ -468,6 +468,7 @@ html, body, .container-fluid {
 	padding:30px 20px 20px;
 	background-color: white;
 	position: relative;
+	height: auto;
 }
 .status
 {
