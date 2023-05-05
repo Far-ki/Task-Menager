@@ -2,7 +2,6 @@
 {% block content %}
 
 <div class="container-fluid">
-
   <!--KOD GRUPY-->
   <div class="row text-center">
     <div class="col-md-4 offset-md-4">
@@ -24,7 +23,9 @@
         <div class="card-body">
           {% for event in events %}
           <div class="button-wrapper">
-            <button class="btn btn-secondary event-button" data-title="{{ event.title }}" data-id="{{ event.id }}" data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title }}</a></button>
+            <button class="btn btn-secondary event-button" data-title="{{ event.title }}" data-id="{{ event.id }}"
+              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title
+                }}</a></button>
           </div>
           {% endfor %}
         </div>
@@ -38,7 +39,7 @@
         <div class="card-body">
           {% for user in users %}
           <div class="button-wrapper">
-            <button class="btn btn-secondary user-button"><a class="nav-link" >{{ user.nickname }}</a></button>
+            <button class="btn btn-secondary user-button"><a class="nav-link">{{ user.nickname }}</a></button>
           </div>
           {% endfor %}
         </div>
@@ -60,7 +61,7 @@
             <input type="hidden" name="some_id" value="{{ group.id }}">
             <button type="submit">Admin</button>
           </form>
-        {% endif %}
+          {% endif %}
         </div>
         <div class="button-wrapper">
           <button class="lista_osob"><a class="nav-link"
@@ -70,8 +71,14 @@
         {% endfor %}
       </div>
     </div>
-    -->
 
+
+    <style>
+      .overflow-auto {
+        overflow-y: auto;
+        max-height: 200px;
+      }
+    </style>
     <!--MODAL DO EVENTU-->
     <div class="modal fade" id="event-popup" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -84,11 +91,7 @@
             <div class="row">
               <div class="col-6">
                 <h6>All users:</h6>
-                <ul class="list-group list-group-flush overflow-auto">
-                {% for user in users %}
-                  <li class="list-group-item">{{ user.nickname }}</li>
-                {% endfor %}
-                </ul>
+                <ul class="list-group list-group-flush overflow-auto user-list"></ul>
               </div>
               <div class="col-6">
                 <h6>Users assigned to task:</h6>
@@ -97,12 +100,13 @@
             </div>
           </div>
           <div class="modal-footer">
+            <div class="alert-container mx-auto"></div>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!--MODAL DO USERA-->
     <div class="modal fade" id="user-popup" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -114,7 +118,7 @@
             </button>
           </div>
           <div class="modal-body">
-            
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -122,8 +126,6 @@
         </div>
       </div>
     </div>
-
-
   </div>
 </div>
 {% endblock %}
@@ -131,37 +133,129 @@
 {% block scripts %}
 
 <script>
-  $(document).ready(function() {
-    $('.event-button').click(function() {
+  $(document).ready(function () {
+    $('.event-button').click(function () {
       var title = $(this).data('title');
       var id = $(this).data('id');
       var start = $(this).data('start');
       var end = $(this).data('end');
       var event_users_data = jQuery.parseJSON(`{{ event_user|tojson }}`);
-      var event_users = $.grep(event_users_data, function(item) {
+      var event_users = $.grep(event_users_data, function (item) {
         return item.id === id;
       });
+
+      var users_data = jQuery.parseJSON(`{{ users_data|tojson }}`);
+      var innerhtml_2 = '';
+
+      for (var g = 0; g < users_data.length; g++) {
+        var flag;
+        flag = 0;
+        for (var j = 0; j < event_users.length; j++) {
+          if (event_users[j].nickname == users_data[g].nickname) {
+            flag = 1;
+          }
+        }
+        if (flag == 0) {
+          innerhtml_2 = innerhtml_2 + '<li class="list-group-item user-item">' + users_data[g].nickname + '</li>'
+        }
+      }
+      $('#event-popup .user-list').html(innerhtml_2);
+
       var innerhtml = '';
       $('#event-popup .modal-title').text(title);
       $('#event-popup .event-id').text(id);
       $('#event-popup .event-start').text(start);
       $('#event-popup .event-end').text(end);
+      $('#event-popup').data('id', id);
       $('#event-popup').modal('show');
 
       for (var i = 0; i < event_users.length; ++i) {
-        //console.log(event_users[i].nickname);
-        innerhtml = innerhtml + '<li class="list-group-item">' + event_users[i].nickname + '</li>';
+        innerhtml = innerhtml + '<li class="list-group-item assigned-user-item">' + event_users[i].nickname + '</li>';
       }
       $('#event-popup .event-users').html(innerhtml);
+
+
     });
   });
 
 
-  $(document).ready(function() {
-    $('.user-button').click(function() {
+  $(document).ready(function () {
+    $('.user-button').click(function () {
       $('#user-popup').modal('show');
     });
   });
-</script>
 
+
+  $(document).on("click", ".user-item", function () {
+    var nickname = $(this).text();
+
+    $(this).remove();
+
+    var newListItem = "<li class='list-group-item assigned-user-item'>" + nickname + "</li>";
+    $(".event-users").append(newListItem);
+
+    var nickname = $(this).text();
+    var event_id = $('#event-popup').data('id');
+
+    $.ajax({
+      type: "POST",
+      url: "/add_user_to_event",
+      data: {
+        nickname: nickname,
+        event_id: event_id,
+      },
+      success: function (response) {
+        var alertBox = $('<div class="alert alert-success">User added to event successfully.</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+      error: function (xhr, status, error) {
+        var alertBox = $('<div class="alert alert-danger">Error adding user to event: ' + error + '</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+    });
+  });
+
+
+  $(document).on("click", ".assigned-user-item", function () {
+    var nickname = $(this).text();
+
+    $(this).remove();
+
+    var newListItem = "<li class='list-group-item user-item'>" + nickname + "</li>";
+    $(".user-list").append(newListItem);
+
+    var nickname = $(this).text();
+    var event_id = $('#event-popup').data('id');
+
+    $.ajax({
+      type: "POST",
+      url: "/remove_user_from_event",
+      data: {
+        nickname: nickname,
+        event_id: event_id,
+      },
+      success: function (response) {
+        var alertBox = $('<div class="alert alert-success">User removed from event successfully.</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+      error: function (xhr, status, error) {
+        var alertBox = $('<div class="alert alert-danger">Error removing user from event: ' + error + '</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+    });
+  });
+
+
+  $('.modal').on('hidden.bs.modal', function () {
+    location.reload();
+  });
+</script>
 {% endblock %}
