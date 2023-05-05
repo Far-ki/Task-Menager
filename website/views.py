@@ -3,10 +3,9 @@ from flask_login import login_user, login_required, logout_user, current_user
 from sqlalchemy import asc
 from . import db
 from .models import User,Group,Event,group_membership, Subtask
-from datetime import datetime
 from flask import jsonify
+from datetime import datetime
 import json
-
 views = Blueprint('views',__name__)
 
 
@@ -14,10 +13,11 @@ views = Blueprint('views',__name__)
 def home():
     if current_user.is_authenticated:
         subtasks = {}
+        now = datetime.now()
         personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
         for event in personalTop5:
             subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).all()
-        return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks)
+        return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
     else:
         return render_template('home.html',user=current_user)
 
