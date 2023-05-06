@@ -97,7 +97,14 @@
 
 				<ul>
 					{% for subtask in subtasks[event.id] %}
-					<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }} {{ subtask.is_completed }}</li>
+					<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }}
+						<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="is_completed" name="is_completed">
+						<label class="form-check-label" for="is_completed">
+						  Completed
+						</label>
+					    </div>
+					</li>
 					{% endfor %}
 				</ul>
 			</div>
