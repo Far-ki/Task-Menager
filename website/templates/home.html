@@ -97,7 +97,7 @@
 
 				<ul>
 					{% for subtask in subtasks[event.id] %}
-					<li>{{ subtask.title }}</li>
+					<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }} {{ subtask.is_completed }}</li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -126,11 +126,8 @@
 					<span class="badge badge-pill badge-success">In Progress</span>
 					{% endif %}
 			</div>
-			<div class="col-md-2">
-				<div class="progress" style="height: 20px;">
-					<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25"
-						aria-valuemin="0" aria-valuemax="100">25%</div>
-				</div>
+			<div class="col-md-2 div_bar">
+				
 			</div>
 		</div>
 	
@@ -218,11 +215,9 @@
 					<span class="badge badge-pill badge-success">In Progress</span>
 					{% endif %}
 			</div>
-			<div class="col-md-2">
-				<div class="progress" style="height: 20px;">
-					<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25"
-						aria-valuemin="0" aria-valuemax="100">25%</div>
-				</div>
+			<div class="col-md-2 div_bar">
+				
+				
 			</div>
 	
 
@@ -250,4 +245,52 @@
 	</div>
 </footer>
 </div>
+
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+ 
+
+	$(document).ready(function () {
+		var isCompletedList = []; // inicjalizacja pustej tablicy
+	  
+		// pętla dla każdego elementu z klasą 'is_completed'
+		$('.is_completed').each(function() {
+		  var isCompleted = $(this).data('is');
+		  isCompletedList.push(isCompleted); // dodanie wartości do tablicy
+		});
+	  
+		console.log(isCompletedList); // wyświetlenie tablicy w konsoli
+
+		var count_true = 0;
+		var count_false = 0;
+		
+		for (var i = 0; i < isCompletedList.length; i++) {
+		  if (isCompletedList[i].toString() === "True") {
+			count_true++;
+		  } 
+		  if (isCompletedList[i] === "False") {
+			count_false++;
+		  }
+		}
+		let temp;
+		temp=(count_true/isCompletedList.length)*100
+		temp=temp.toFixed(2)
+		if(count_true == 0)
+		{
+			temp=0;
+		}
+		var html_1 ='<div class="progress" style="height: 20px;"><div class="progress-bar" role="progressbar" style="width: '+temp+'%;" aria-valuenow="'+temp+'"aria-valuemin="0" aria-valuemax="100">'+temp+'%</div></div>'
+		
+		$('.div_bar').html(html_1);
+
+	  });
+
+</script>
+
 {% endblock %}
