@@ -24,8 +24,7 @@
           {% for event in events %}
           <div class="button-wrapper">
             <button class="btn btn-secondary event-button" data-title="{{ event.title }}" data-id="{{ event.id }}"
-              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title
-                }}</a></button>
+              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title}}</a></button>
           </div>
           {% endfor %}
         </div>
@@ -39,46 +38,14 @@
         <div class="card-body">
           {% for user in users %}
           <div class="button-wrapper">
-            <button class="btn btn-secondary user-button"><a class="nav-link">{{ user.nickname }}</a></button>
+            <button class="btn btn-secondary user-button" data-nickname="{{ user.nickname }}" data-email="{{ user.email }}" 
+            data-user_id="{{ user.id }}" data-group_id="{{ group.id }}"><a class="nav-link">{{ user.nickname }}</a></button>
           </div>
           {% endfor %}
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 offset-md-1 d-flex justify-content-end align-items-center">
-      <div class="button-container">
-        {% for user in users %}
-        {% if poss_admin.is_admin %}
-        <div class="sss">
-          <form action="{{ url_for('panel.kick_out_of_group') }}" method="POST">
-            <input type="hidden" name="member_id" value="{{ user.id }}">
-            <input type="hidden" name="some_id" value="{{ group.id }}">
-            <button type="submit">Kick</button>
-          </form>
-          <form action="{{ url_for('panel.make_admin') }}" method="POST">
-            <input type="hidden" name="member_id" value="{{ user.id }}">
-            <input type="hidden" name="some_id" value="{{ group.id }}">
-            <button type="submit">Admin</button>
-          </form>
-          {% endif %}
-        </div>
-        <div class="button-wrapper">
-          <button class="lista_osob"><a class="nav-link"
-              href="{% if user.id == current_user.id %}{{ url_for('auth.profile') }}{% else %}{{ url_for('auth.fake_profile', user_id=user.id) }}{% endif %}">
-              {{ user.nickname }}</a></button>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
-
-    <style>
-      .overflow-auto {
-        overflow-y: auto;
-        max-height: 200px;
-      }
-    </style>
     <!--MODAL DO EVENTU-->
     <div class="modal fade" id="event-popup" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -112,15 +79,19 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">User details</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title mx-auto">User details</h5>
           </div>
-          <div class="modal-body">
-
+          <div class="modal-body mx-auto">
+            <h5 class="modal-user-nickname"></h5>
+            <h5 class="modal-user-email"></h5>
           </div>
           <div class="modal-footer">
+            {% if poss_admin.is_admin %}
+            <form class="kick_user_form" action="{{ url_for('panel.kick_out_of_group') }}" method="POST">
+            </form>
+            <form class="make_admin_user_form" action="{{ url_for('panel.make_admin') }}" method="POST">
+            </form>
+            {% endif %}
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -173,17 +144,30 @@
         innerhtml = innerhtml + '<li class="list-group-item assigned-user-item">' + event_users[i].nickname + '</li>';
       }
       $('#event-popup .event-users').html(innerhtml);
-
-
     });
   });
+
 
 
   $(document).ready(function () {
     $('.user-button').click(function () {
+      var nickname = $(this).data('nickname');
+      var email = $(this).data('email');
+      var user_id = $(this).data('user_id');
+      var group_id = $(this).data('group_id');
+
+      $('#user-popup .modal-user-nickname').text(nickname);
+      $('#user-popup .modal-user-email').text(email);
       $('#user-popup').modal('show');
+
+      var innerhtml_3 = '<input type="hidden" name="member_id" value="' + user_id + '">' + '<input type="hidden" name="some_id" value="{{ group.id }}"><button type="submit" class="btn btn-danger mx-auto">Kick user</button>'
+      var innerhtml_4 = '<input type="hidden" name="member_id" value="' + user_id + '">' + '<input type="hidden" name="some_id" value="{{ group.id }}"><button type="submit" class="btn btn-warning mr-auto">Make user an admin</button>'
+      $('#user-popup .kick_user_form').html(innerhtml_3);
+      $('#user-popup .make_admin_user_form').html(innerhtml_4);
+
     });
   });
+
 
 
   $(document).on("click", ".user-item", function () {

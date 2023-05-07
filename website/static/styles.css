@@ -492,5 +492,17 @@ hr {
 	letter-spacing: 1px;
 	text-transform: uppercase;
   }
-  
 
+  .overflow-auto {
+	overflow-y: auto;
+	max-height: 200px;
+  }
+  .kick_user_form{
+	background-color: transparent;
+	width: 90px;
+  }
+
+  .make_admin_user_form{
+	background-color: transparent;
+	margin-right: 27%;
+  }
