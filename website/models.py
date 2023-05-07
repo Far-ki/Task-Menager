@@ -39,6 +39,8 @@ class Event(db.Model):
     title = db.Column(db.String(80))
     start = db.Column(db.DateTime)
     end = db.Column(db.DateTime)
+    description = db.Column(db.String(400))
+    completed = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
     is_completed = db.Column(db.Boolean, default = False)
@@ -49,6 +51,8 @@ class Event(db.Model):
             'title': self.title,
             'start': self.start.isoformat(),
             'end': self.end.isoformat() if self.end else None,
+            'description': self.description,
+            'completed': self.completed,
             'Completed': self.is_completed
         }
 
@@ -58,9 +62,4 @@ class Subtask(db.Model):
     description = db.Column(db.String(200))
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     is_completed = db.Column(db.Boolean, default = False)
-
-
-
-
-
 
