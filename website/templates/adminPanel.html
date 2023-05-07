@@ -1,20 +1,245 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %} 
+{% extends "base.html" %} {% block title %}Login{% endblock %}
 {% block content %}
 
-<div class="container mt-5">
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
-        <div class="card">
-          <div class="card-header">
-            Group code:
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">{{ group.code }}</h5>
+<div class="container-fluid">
+  <!--KOD GRUPY-->
+  <div class="row text-center">
+    <div class="col-md-4 offset-md-4">
+      <div class="card">
+        <div class="card-header">
+          Group code:
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ group.code }}</h5>
+        </div>
+      </div>
 
+
+      <!--LISTA EVENTÓW-->
+      <div class="card">
+        <div class="card-header">
+          Events:
+        </div>
+        <div class="card-body">
+          {% for event in events %}
+          <div class="button-wrapper">
+            <button class="btn btn-secondary event-button" data-title="{{ event.title }}" data-id="{{ event.id }}"
+              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title}}</a></button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!--LISTA USERÓW W DANEJ GRUPIE-->
+      <div class="card">
+        <div class="card-header">
+          Group members:
+        </div>
+        <div class="card-body">
+          {% for user in users %}
+          <div class="button-wrapper">
+            <button class="btn btn-secondary user-button" data-nickname="{{ user.nickname }}" data-email="{{ user.email }}" 
+            data-user_id="{{ user.id }}" data-group_id="{{ group.id }}"><a class="nav-link">{{ user.nickname }}</a></button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!--MODAL DO EVENTU-->
+    <div class="modal fade" id="event-popup" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title mx-auto"></h5>
+          </div>
+          <div class="modal-body">
+            <p><span class="event-start"></span> - <span class="event-end"></span></p>
+            <div class="row">
+              <div class="col-6">
+                <h6>All users:</h6>
+                <ul class="list-group list-group-flush overflow-auto user-list"></ul>
+              </div>
+              <div class="col-6">
+                <h6>Users assigned to task:</h6>
+                <ul class="list-group list-group-flush overflow-auto event-users"></ul>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="alert-container mx-auto"></div>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--MODAL DO USERA-->
+    <div class="modal fade" id="user-popup" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title mx-auto">User details</h5>
+          </div>
+          <div class="modal-body mx-auto">
+            <h5 class="modal-user-nickname"></h5>
+            <h5 class="modal-user-email"></h5>
+          </div>
+          <div class="modal-footer">
+            {% if poss_admin.is_admin %}
+            <form class="kick_user_form" action="{{ url_for('panel.kick_out_of_group') }}" method="POST">
+            </form>
+            <form class="make_admin_user_form" action="{{ url_for('panel.make_admin') }}" method="POST">
+            </form>
+            {% endif %}
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+{% endblock %}
 
+{% block scripts %}
+
+<script>
+  $(document).ready(function () {
+    $('.event-button').click(function () {
+      var title = $(this).data('title');
+      var id = $(this).data('id');
+      var start = $(this).data('start');
+      var end = $(this).data('end');
+      var event_users_data = jQuery.parseJSON(`{{ event_user|tojson }}`);
+      var event_users = $.grep(event_users_data, function (item) {
+        return item.id === id;
+      });
+
+      var users_data = jQuery.parseJSON(`{{ users_data|tojson }}`);
+      var innerhtml_2 = '';
+
+      for (var g = 0; g < users_data.length; g++) {
+        var flag;
+        flag = 0;
+        for (var j = 0; j < event_users.length; j++) {
+          if (event_users[j].nickname == users_data[g].nickname) {
+            flag = 1;
+          }
+        }
+        if (flag == 0) {
+          innerhtml_2 = innerhtml_2 + '<li class="list-group-item user-item">' + users_data[g].nickname + '</li>'
+        }
+      }
+      $('#event-popup .user-list').html(innerhtml_2);
+
+      var innerhtml = '';
+      $('#event-popup .modal-title').text(title);
+      $('#event-popup .event-id').text(id);
+      $('#event-popup .event-start').text(start);
+      $('#event-popup .event-end').text(end);
+      $('#event-popup').data('id', id);
+      $('#event-popup').modal('show');
+
+      for (var i = 0; i < event_users.length; ++i) {
+        innerhtml = innerhtml + '<li class="list-group-item assigned-user-item">' + event_users[i].nickname + '</li>';
+      }
+      $('#event-popup .event-users').html(innerhtml);
+    });
+  });
+
+
+
+  $(document).ready(function () {
+    $('.user-button').click(function () {
+      var nickname = $(this).data('nickname');
+      var email = $(this).data('email');
+      var user_id = $(this).data('user_id');
+      var group_id = $(this).data('group_id');
+
+      $('#user-popup .modal-user-nickname').text(nickname);
+      $('#user-popup .modal-user-email').text(email);
+      $('#user-popup').modal('show');
+
+      var innerhtml_3 = '<input type="hidden" name="member_id" value="' + user_id + '">' + '<input type="hidden" name="some_id" value="{{ group.id }}"><button type="submit" class="btn btn-danger mx-auto">Kick user</button>'
+      var innerhtml_4 = '<input type="hidden" name="member_id" value="' + user_id + '">' + '<input type="hidden" name="some_id" value="{{ group.id }}"><button type="submit" class="btn btn-warning mr-auto">Make user an admin</button>'
+      $('#user-popup .kick_user_form').html(innerhtml_3);
+      $('#user-popup .make_admin_user_form').html(innerhtml_4);
+
+    });
+  });
+
+
+
+  $(document).on("click", ".user-item", function () {
+    var nickname = $(this).text();
+
+    $(this).remove();
+
+    var newListItem = "<li class='list-group-item assigned-user-item'>" + nickname + "</li>";
+    $(".event-users").append(newListItem);
+
+    var nickname = $(this).text();
+    var event_id = $('#event-popup').data('id');
+
+    $.ajax({
+      type: "POST",
+      url: "/add_user_to_event",
+      data: {
+        nickname: nickname,
+        event_id: event_id,
+      },
+      success: function (response) {
+        var alertBox = $('<div class="alert alert-success">User added to event successfully.</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+      error: function (xhr, status, error) {
+        var alertBox = $('<div class="alert alert-danger">Error adding user to event: ' + error + '</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+    });
+  });
+
+
+  $(document).on("click", ".assigned-user-item", function () {
+    var nickname = $(this).text();
+
+    $(this).remove();
+
+    var newListItem = "<li class='list-group-item user-item'>" + nickname + "</li>";
+    $(".user-list").append(newListItem);
+
+    var nickname = $(this).text();
+    var event_id = $('#event-popup').data('id');
+
+    $.ajax({
+      type: "POST",
+      url: "/remove_user_from_event",
+      data: {
+        nickname: nickname,
+        event_id: event_id,
+      },
+      success: function (response) {
+        var alertBox = $('<div class="alert alert-success">User removed from event successfully.</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+      error: function (xhr, status, error) {
+        var alertBox = $('<div class="alert alert-danger">Error removing user from event: ' + error + '</div>').appendTo('.alert-container');
+        setTimeout(function () {
+          alertBox.fadeOut();
+        }, 1500);
+      },
+    });
+  });
+
+
+  $('.modal').on('hidden.bs.modal', function () {
+    location.reload();
+  });
+</script>
 {% endblock %}

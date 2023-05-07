@@ -1,6 +1,7 @@
 from .models import Event
 from flask import request,jsonify,Blueprint,redirect,url_for,render_template,flash
 from . import db
+from .models import Subtask,Event
 from flask_login import login_user, login_required, logout_user, current_user
 event = Blueprint('event', __name__)
 
@@ -16,9 +17,14 @@ def create_event():
     date_to = request.form.get('date_to')
     description = request.form.get('description')
     completed = request.form.get('is_completed')
-    #user_id = 'completed' in request.form
     user_id = current_user.id
-    event = Event(title=event_title, start=date_from,end=date_to,user_id=user_id,description=description,completed=completed)
+    group_id = request.form.get('Group_id')
+   
+    if group_id:
+        event = Event(title=event_title, start=date_from, end=date_to,user_id=user_id, description=description, completed=completed, group_id=group_id)
+    else:
+        event = Event(title=event_title, start=date_from, end=date_to,user_id=user_id, description=description, completed=completed)
+        
     db.session.add(event)
     db.session.commit()
     flash('Task created!')
@@ -47,3 +53,18 @@ def delete_event():
     except:
         flash('There is no such record','error')
     return redirect(url_for('views.calendar'))
+
+@event.route('/create_subtask', methods=['POST'])
+def create_subtask():
+    title = request.form.get('subtask-title')
+    description = request.form.get('subtask-description')
+    event_id = request.form.get('event_id')
+    event = Event.query.get_or_404(event_id)
+    flash(event_id)
+
+    subtask = Subtask(title=title, description = description, event_id = event_id)
+
+    db.session.add(subtask)
+    db.session.commit()
+
+    return redirect(url_for('views.home'))

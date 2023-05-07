@@ -2,97 +2,302 @@
 {% block content %}
 
 
-	<!--
+<!--
    ####################################################
    M A I N C O N T E N T
    ####################################################
    -->
-	{% if user.is_authenticated %}
-	  <div class="row justify-content-center">
-		<div class="col-md-7">
-			<div class="container">
-				<div class="row">
-				  <div class="col-sm">
-					<h4>Personal tasks</h4>
-					<div class="list-group">
+{% if user.is_authenticated %}
+<div class="container">
+	<h3>Overdue Tasks: 0</h3>
+	<div class="row">
+		<div class="col-md-4">
+			<span>Title</span>
+		</div>
 
-						{% for event in personalTop5 %}
-						{% if event.start.date() == event.end.date() %}
-						<a href="#" class="list-group-item list-group-item-action ">
-							<div class="card">
-								<div class="card-header">
-								  <h4>{{ event.title }}</h4>
+		<div class="col-md-2">
+			<span>Assigned to</span>
+		</div>
+		<div class="col-md-2">
+			<span>Est. Hours</span>
+		</div>
+		<div class="col-md-2">
+			<span>Status</span>
+		</div>
+		<div class="col-md-2">
+			<span>Progress</span>
+		</div>
+
+
+		<div class="status">
+			<span class="badge badge-pill badge-success">In Progress</span>
+			<span class="badge badge-pill badge-danger">New</span>
+			<span class="badge badge-pill badge-warning">Closed</span>
+		</div>
+
+	</div>
+	<hr>
+	{% for event in personalTop5 %}
+	{% if event.start.date() == event.end.date() %}
+	
+
+		<div class="row">
+
+
+			<div class="col-md-4">
+
+
+				<h5>{{ event.title }}</h5>
+
+				<blockquote class="blockquote mb-4">
+
+					<button type="button" class="btn btn-primary" data-toggle="modal"
+						data-target="#createSubtaskModal{{ event.id }}" data-eventid="{{ event.id }}">Create
+						Subtask</button>
+
+					<div class="modal fade" id="createSubtaskModal{{ event.id }}" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Create Subtask</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
 								</div>
-								<div class="card-body">
-								  <blockquote class="blockquote mb-0">
-									<p> Description placeholder </p>
-									<footer class="footer"> <small> {{ event.start.date() }}, {{ event.start.strftime("%H:%M") }} - {{ event.end.strftime("%H:%M") }}</small> </footer>
-								  </blockquote>
+								<div class="modal-body">
+									<form method="POST" action="{{ url_for('event.create_subtask')}}">
+										<input type="hidden" name="event_id" value="{{ event.id }}">
+
+										<div class="form-group">
+											<label for="subtask-title" class="col-form-label">Title:</label>
+											<input type="text" class="form-control" id="subtask-title"
+												name="subtask-title">
+										</div>
+										<div class="form-group">
+											<label for="subtask-description" class="col-form-label">Description:</label>
+											<textarea class="form-control" id="subtask-description"
+												name="subtask-description"></textarea>
+										</div>
+										<button type="submit" class="btn btn-primary">Create</button>
+									</form>
 								</div>
-							  </div>
-						</a>
-						{% else %}
-						<a href="#" class="list-group-item list-group-item-action ">
-							<div class="card">
-								<div class="card-header">
-								  <h4>{{ event.title }}</h4>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
 								</div>
-								<div class="card-body">
-								  <blockquote class="blockquote mb-0">
-									<p> Description placeholder </p>
-									<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{ event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
-								  </blockquote>
-								</div>
-							  </div>
-						</a>
-						{% endif %}
-						{% endfor %}
-					  </div>
-				  </div>
-				  <div class="col-md-5">
-					<h4>Group tasks</h4>
-					<div class="list-group">
-						<a href="#" class="list-group-item list-group-item-action ">Task 1</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 2</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 3</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 4</a>
-						<a href="#" class="list-group-item list-group-item-action">Task 5</a>
-					  </div>
-				  </div>
-				</div>
+							</div>
+						</div>
+					</div>
+					<p><small>Description placeholder1.</small></p>
+					<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{
+						event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
+				</blockquote>
+
+				<ul>
+					{% for subtask in subtasks[event.id] %}
+					<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }}
+						<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="is_completed" name="is_completed">
+						<label class="form-check-label" for="is_completed">
+						  Completed
+						</label>
+					    </div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<div class="col-md-2">
+				<span>
+					User
+				</span>
+			</div>
+			<div class="col-md-2">
+				<span>
+					{% set duration_seconds = (event.end- now ).total_seconds() %}
+					{% set hours = duration_seconds // 3600 %}
+					{% set minutes = (duration_seconds % 3600) // 60 %}
+					{% set seconds = duration_seconds % 60 %}
+					{% if hours <= 24 %}
+					 {{ hours }} H {{ minutes }} M 
+					{% else %} 
+					{{ (event.end- now).days }} dni 
+					{% endif %} 
+
+			</div>
+			<div class="col-md-2">
+
+				{% if event.end- now <= now-now %} <span class="badge badge-pill badge-warning">Closed</span>
+					{% elif event.end- now > now-now %}
+					<span class="badge badge-pill badge-success">In Progress</span>
+					{% endif %}
+			</div>
+			<div class="col-md-2 div_bar">
+				
 			</div>
 		</div>
-		
 	
 	{% else %}
-	<div class="col main">
-		<h1 class="display-4">Welcome to Callendary!</h1>
-		<p class="lead">Please login or sign up to access the website.</p>
-	</div></div>
-	{% endif %}
+
+	
+
+		<div class="row">
+			<div class="col-md-4">
 
 
-	<!--
+				<h5>{{ event.title }}</h5>
+
+				<blockquote class="blockquote mb-4">
+
+					<button type="button" class="btn btn-primary" data-toggle="modal"
+						data-target="#createSubtaskModal{{ event.id }}" data-eventid="{{ event.id }}">Create
+						Subtask</button>
+
+					<div class="modal fade" id="createSubtaskModal{{ event.id }}" tabindex="-1" role="dialog"
+						aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Create Subtask</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<form method="POST" action="{{ url_for('event.create_subtask')}}">
+										<input type="hidden" name="event_id" value="{{ event.id }}">
+
+										<div class="form-group">
+											<label for="subtask-title" class="col-form-label">Title:</label>
+											<input type="text" class="form-control" id="subtask-title"
+												name="subtask-title">
+										</div>
+										<div class="form-group">
+											<label for="subtask-description" class="col-form-label">Description:</label>
+											<textarea class="form-control" id="subtask-description"
+												name="subtask-description"></textarea>
+										</div>
+										<button type="submit" class="btn btn-primary">Create</button>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<p><small>Description placeholder1.</small></p>
+					<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{
+						event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
+				</blockquote>
+
+			</div>
+
+			<div class="col-md-2">
+				<span>
+					User
+				</span>
+			</div>
+			<div class="col-md-2">
+				<span>
+					{% set duration_seconds = (event.end- now ).total_seconds() %}
+					{% set hours = duration_seconds // 3600 %}
+					{% set minutes = (duration_seconds % 3600) // 60 %}
+					{% set seconds = duration_seconds % 60 %}
+					{% if hours <= 24  %}
+					 {{ hours }} H {{ minutes }} M {{ seconds }} S 
+					{% else %} 
+					{{ (event.end- now).days }} dni 
+					{% endif %} 
+				</span>
+
+			</div>
+			<div class="col-md-2">
+
+				{% if event.end- now <= now-now %} <span class="badge badge-pill badge-warning">Closed</span>
+					{% elif event.end- now > now-now %}
+					<span class="badge badge-pill badge-success">In Progress</span>
+					{% endif %}
+			</div>
+			<div class="col-md-2 div_bar">
+				
+				
+			</div>
+	
+
+</div>
+{% endif %}
+{% endfor %}
+
+
+{% else %}
+<div class="col main">
+	<h1 class="display-4">Welcome to Callendary!</h1>
+	<p class="lead">Please login or sign up to access the website.</p>
+</div>
+</div>
+{% endif %}
+
+
+<!--
     ####################################################
     F O O T E R
     ####################################################
     -->
-	<footer class="footer py-3">
-		<div class="container-fluid">
-		</div>
-	</footer>
+<footer class="footer py-3">
+	<div class="container-fluid">
+	</div>
+</footer>
 </div>
 
 
 
-	<!--
-    ####################################################
-    F O O T E R
-    ####################################################
-    -->
-	<footer class="footer py-3">
-		<div class="container-fluid">
-		</div>
-	</footer>
-</div>
+{% endblock %}
+
+
+{% block scripts %}
+
+<script>
+ 
+
+	$(document).ready(function () {
+		var isCompletedList = []; // inicjalizacja pustej tablicy
+	  
+		// pętla dla każdego elementu z klasą 'is_completed'
+		$('.is_completed').each(function() {
+		  var isCompleted = $(this).data('is');
+		  isCompletedList.push(isCompleted); // dodanie wartości do tablicy
+		});
+	  
+		console.log(isCompletedList); // wyświetlenie tablicy w konsoli
+
+		var count_true = 0;
+		var count_false = 0;
+		
+		for (var i = 0; i < isCompletedList.length; i++) {
+		  if (isCompletedList[i].toString() === "True") {
+			count_true++;
+		  } 
+		  if (isCompletedList[i] === "False") {
+			count_false++;
+		  }
+		}
+		let temp;
+		temp=(count_true/isCompletedList.length)*100
+		temp=temp.toFixed(2)
+		if(count_true == 0)
+		{
+			temp=0;
+		}
+		var html_1 ='<div class="progress" style="height: 20px;"><div class="progress-bar" role="progressbar" style="width: '+temp+'%;" aria-valuenow="'+temp+'"aria-valuemin="0" aria-valuemax="100">'+temp+'%</div></div>'
+		
+		$('.div_bar').html(html_1);
+
+	  });
+
+</script>
+
 {% endblock %}

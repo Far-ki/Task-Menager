@@ -1,6 +1,6 @@
 
 body {
-	background:#F5F5F5;
+	background:#f5f5f5;
 }
 
 html, body, .container-fluid {
@@ -8,6 +8,7 @@ html, body, .container-fluid {
 
 	padding-left: 0px;
 	padding-right: 0px;
+	
 
 }
 
@@ -71,6 +72,7 @@ html, body, .container-fluid {
 	top:10px;
 } */
 
+
 .sidebar .nav-item, .navbar {
 	border-bottom: none;
 }
@@ -105,8 +107,8 @@ html, body, .container-fluid {
 	background-color: #555;
 	color: white;
 }
-	  
-	@media screen and (max-width: 900px) {
+
+	@media screen and (max-width: 1000px) {
 		.sidebar {
 		  width: 100%;
 		  height: auto;
@@ -429,8 +431,13 @@ html, body, .container-fluid {
 }
 .BGN
 {
-	font-size: 20px;
+
 	flex:1;
+	font-size: 20px;
+}
+.gname
+{
+	display: inline;
 }
 .LeaveGROUP
 {
@@ -442,6 +449,7 @@ html, body, .container-fluid {
 	text-align: center;
 	flex:2;
 }
+
 
 #description {
 	height: 150px;
@@ -459,3 +467,70 @@ nav + .row > .col {
 .completed-event {
 	background-color: #04AA6D !important;
 }
+
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .button-wrapper {
+    margin-bottom: 8px;
+}
+
+
+.lista_osob
+{
+	width: 150px;
+}
+.sss
+{
+	display: flex;
+	flex-direction: row;
+}
+
+.container
+{
+	margin-top: 17px;
+	padding:30px 20px 20px;
+	background-color: white;
+	position: relative;
+	height: auto;
+}
+.status
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	
+}
+hr {
+	border: none;
+	height: 1px;
+	background-color: #d3d3d3;
+	margin: 20px 0;
+	padding: 0;
+  }
+
+  h4 {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 3rem;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+  }
+
+  .overflow-auto {
+	overflow-y: auto;
+	max-height: 200px;
+  }
+  .kick_user_form{
+	background-color: transparent;
+	width: 90px;
+  }
+
+  .make_admin_user_form{
+	background-color: transparent;
+	margin-right: 27%;
+  }
+
