@@ -19,7 +19,7 @@ def home():
         now = datetime.now()
         personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
         for event in personalTop5:
-            subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).all()
+            subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
         return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
     else:
         return render_template('home.html',user=current_user)
@@ -91,3 +91,12 @@ def remove_user_from_event():
   db.session.commit()
 
   return jsonify({'success': True})
+
+@views.route('/update_subtask', methods=['POST'])
+def update_subtask():
+    subtask_id = request.json['id']
+    is_completed = request.json['is_completed']
+    subtask = Subtask.query.get(subtask_id)
+    subtask.is_completed = is_completed
+    db.session.commit()
+    return jsonify({'message': 'Subtask updated successfully.'})
