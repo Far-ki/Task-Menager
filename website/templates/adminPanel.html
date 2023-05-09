@@ -2,9 +2,9 @@
 {% block content %}
 
 <div class="container-fluid">
-  <!--KOD GRUPY-->
+  <!-- KOD GRUPY -->
   <div class="row text-center">
-    <div class="col-md-4 offset-md-4">
+    <div class="col-md-8 offset-md-2">
       <div class="card">
         <div class="card-header">
           Group code:
@@ -13,29 +13,35 @@
           <h5 class="card-title">{{ group.code }}</h5>
         </div>
       </div>
+    </div>
+  </div>
 
-
-      <!--LISTA EVENTÓW-->
+  <!-- ROW FOR EVENTS AND GROUP MEMBERS -->
+  <div class="row text-center mt-4">
+    <div class="col-md-4 offset-md-2">
+      <!-- LISTA EVENTÓW -->
       <div class="card">
         <div class="card-header">
           Events:
         </div>
-        <div class="card-body">
+        <div class="card-body overflow-auto" style="max-height: 380px;">
           {% for event in events %}
           <div class="button-wrapper">
             <button class="btn btn-secondary event-button" data-title="{{ event.title }}" data-id="{{ event.id }}"
-              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title}}</a></button>
+              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title }}</a></button>
           </div>
           {% endfor %}
         </div>
       </div>
+    </div>
 
-      <!--LISTA USERÓW W DANEJ GRUPIE-->
+    <div class="col-md-4">
+      <!-- LISTA USERÓW W DANEJ GRUPIE -->
       <div class="card">
         <div class="card-header">
           Group members:
         </div>
-        <div class="card-body">
+        <div class="card-body overflow-auto" style="max-height: 380px;">
           {% for user in users %}
           <div class="button-wrapper">
             <button class="btn btn-secondary user-button" data-nickname="{{ user.nickname }}" data-email="{{ user.email }}" 
@@ -45,6 +51,12 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+
+
+
 
     <!--MODAL DO EVENTU-->
     <div class="modal fade" id="event-popup" tabindex="-1" role="dialog">
