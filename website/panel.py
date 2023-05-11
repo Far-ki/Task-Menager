@@ -1,7 +1,7 @@
 from flask import request,jsonify,Blueprint,redirect,url_for,render_template,flash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-from .models import Group,group_membership,User
+from .models import Group,group_membership,User, event_user
 from sqlalchemy import update, and_
 panel = Blueprint('panel', __name__)
 
@@ -11,11 +11,11 @@ panel = Blueprint('panel', __name__)
 @panel.route('/adminPanel/kick', methods=['POST'])
 @login_required
 def kick_out_of_group():
-    user_id = request.form.get("member_id")
+    user_id = request.form.get("member_id") #id wyrzucanego
     group_id = request.form.get("some_id")
     # flash(f'user id: {user_id} , group id: {group_id}')
 
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first() #wyrzucany user
     group = Group.query.filter_by(id=group_id).first()
 
     my_id = current_user.id
@@ -26,6 +26,7 @@ def kick_out_of_group():
         if admincheck.is_admin:
             flash("You can't kick yourself out of the group")
         else:
+            db.session.query(event_user).filter(event_user.c.user_id == user_id).delete()
             group.user.remove(user)
         # flash(f'{user} with id {user_id} has been deleted from the group')
             db.session.commit()

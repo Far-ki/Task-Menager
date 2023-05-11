@@ -1,4 +1,4 @@
-from .models import Group,group_membership
+from .models import Group,group_membership, event_user
 from flask import request,jsonify,Blueprint,redirect,url_for,render_template,flash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
@@ -60,8 +60,10 @@ def join_group():
 @login_required
 def leave_group():
     user = current_user
+    user_id = user.id
     group_id = request.args.get('group_id')
     group = Group.query.filter_by(id=group_id).first()
+    db.session.query(event_user).filter(event_user.c.user_id == user_id).delete()
     user.groups.remove(group)
     db.session.commit()
 
