@@ -528,3 +528,18 @@ nav + .row > .col {
 .completed-event {
 	background-color: #04AA6D !important;
 }
+
+/**
+ * Progress bars with centered text
+ */
+
+ .progress {
+    position: relative;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+ }
