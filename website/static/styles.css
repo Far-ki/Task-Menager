@@ -543,3 +543,13 @@ nav + .row > .col {
     width: 100%;
     color: black;
  }
+
+ .evnt
+ {
+	display: flex;
+	justify-content: left;
+ }
+ .subtsk
+ {
+	display: flex;
+ }

@@ -44,6 +44,7 @@ class Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
     is_completed = db.Column(db.Boolean, default = False)
+    subtasks = db.relationship('Subtask', backref='event', lazy=True)
     
     def as_dict(self):
         return {
@@ -63,7 +64,14 @@ class Subtask(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     is_completed = db.Column(db.Boolean, default = False)
 
-
-
+    
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'event_id': self.event_id,
+            'is_completed': self.is_completed
+        }
 
 

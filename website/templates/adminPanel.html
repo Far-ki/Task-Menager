@@ -28,7 +28,8 @@
           {% for event in events %}
           <div class="button-wrapper">
             <button class="btn btn-secondary event-button" data-title="{{ event.title }}" data-id="{{ event.id }}"
-              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title }}</a></button>
+              data-start="{{ event.start }}" data-end="{{ event.end }}"><a class="nav-link">{{ event.title
+                }}</a></button>
           </div>
           {% endfor %}
         </div>
@@ -44,16 +45,40 @@
         <div class="card-body overflow-auto" style="max-height: 380px;">
           {% for user in users %}
           <div class="button-wrapper">
-            <button class="btn btn-secondary user-button" data-nickname="{{ user.nickname }}" data-email="{{ user.email }}" 
-            data-user_id="{{ user.id }}" data-group_id="{{ group.id }}"><a class="nav-link">{{ user.nickname }}</a></button>
+            <button class="btn btn-secondary user-button" data-nickname="{{ user.nickname }}"
+              data-email="{{ user.email }}" data-user_id="{{ user.id }}" data-group_id="{{ group.id }}"><a
+                class="nav-link">{{ user.nickname }}</a></button>
           </div>
           {% endfor %}
         </div>
       </div>
     </div>
   </div>
-</div>
 
+  <div class="row text-center mt-4">
+    <div class="col-md-8 offset-md-2">
+      <!-- LISTA EVENTÓW -->
+      <div class="card">
+        <div class="card-header">
+          <h5>Subtasks yet to be completed:</h5>
+        </div>
+        <div class="card-body overflow-auto" style="max-height: 380px;">
+          {% for event in events %}
+          <div class="evnt">
+            <h3>{{ event.title }}</h3>
+          </div>
+          {% for subtask in event.subtasks %}
+          {% if subtask.is_completed == False%}
+          <div class ="subtsk">
+          <li>{{ subtask.title }}</li>
+          </div>
+          {% endif %}
+          {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+</div>
 
 
 
@@ -109,6 +134,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>
 {% endblock %}

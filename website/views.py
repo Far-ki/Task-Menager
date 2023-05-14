@@ -35,7 +35,6 @@ def groups():
 
 
 
-
 @views.route('/adminPanel')
 @login_required
 def view_admin_panel():
@@ -43,12 +42,32 @@ def view_admin_panel():
     group = Group.query.get(group_id)
     users = group.user.all()
     users_data = [{"nickname": result.nickname} for result in users]
-    events = Event.query.filter_by(group_id=group_id).all()
+    events = Event.query.filter_by(group_id=group_id).options(db.subqueryload(Event.subtasks)).all()
     event_user = db.session.query(User.nickname, Event.title, Event.id).join(User.events).filter(Event.group_id == group_id).all()
     event_user_data = [{"nickname": result.nickname, "title": result.title, "id": result.id} for result in event_user]
     my_id = current_user.id
     poss_admin = db.session.query(group_membership).filter_by(user_id=my_id).first()
-    return render_template('adminPanel.html',user=current_user, group=group,users = users, events = events, event_user=event_user_data,poss_admin = poss_admin, users_data = users_data)
+
+    event_subtasks = {}
+    
+    # Loop through events and get subtasks for each event
+    for event in events:
+        subtasks = Subtask.query.filter_by(event_id=event.id).all()
+        subtask_data = [subtask.as_dict() for subtask in subtasks]
+        event_subtasks[event.id] = subtask_data
+
+    print(event_subtasks)
+
+    return render_template('adminPanel.html',user=current_user, group=group,users=users, events=events, event_user=event_user_data, poss_admin=poss_admin, users_data=users_data,event_subtasks=event_subtasks)
+
+@views.route('/get_subtasks')
+@login_required
+def get_subtasks():
+    event_id = request.args.get('event_id')
+    event = Event.query.get(event_id)
+    subtasks = event.subtasks
+    subtask_data = [subtask.as_dict() for subtask in subtasks]
+    return jsonify(subtask_data)
 
 @views.route('/add_user_to_event', methods=['POST'])
 def add_user_to_event():
