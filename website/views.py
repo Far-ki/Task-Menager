@@ -27,6 +27,10 @@ def home():
 def calendar():
     return render_template('calendar.html',user = current_user)
 
+@views.route('/group_calendar')
+def group_calendar():
+    return render_template('calendar.html',user = current_user)
+
 @views.route('/groups')
 def groups():
     user=current_user
