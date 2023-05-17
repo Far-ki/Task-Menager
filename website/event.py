@@ -49,6 +49,9 @@ def delete_event():
     try:
         event_id = request.form.get('event_id')
         event = Event.query.filter_by(id=event_id).first()
+
+        db.session.query(Subtask).filter(Subtask.event_id == event_id).delete()
+        #db.session.commit()
         db.session.delete(event)
         db.session.commit()
     except:
