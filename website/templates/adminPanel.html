@@ -19,7 +19,8 @@
                 <div class="card-header">
                   Group Code:
                 </div>
-                <div class="card-body" style="height: 100px; display: flex; align-items: center; justify-content: center;">
+                <div class="card-body"
+                  style="height: 100px; display: flex; align-items: center; justify-content: center;">
                   <h5 class="card-title">{{ group.code }}</h5>
                 </div>
               </div>
@@ -29,55 +30,57 @@
                 <div class="card-header">
                   Tools
                 </div>
-                <div class="card-body" style="height: 100px; display: flex; justify-content: center; align-items: center;">
+                <div class="card-body"
+                  style="height: 100px; display: flex; justify-content: center; align-items: center;">
                   <a href="/group_calendar" class="btn btn-primary" style="width: 150px; margin-right: 10px;">
                     <i class="fa fa-calendar" aria-hidden="true"></i> Calendar
                   </a>
-                
-                  <a href="/" class="btn btn-primary" style="width: 150px; margin-left: 10px;">
-                    <i class="fa fa-list" aria-hidden="true"></i> Tasks
-                  </a>
+
+                  <form action="{{ url_for('panel.show_tasks') }}" method="POST">
+                    <input type="hidden" name="group_id" value="{{ group_id }}">
+                    <button type="submit">Tasks</button>
+                </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
-        <!-- ROW FOR EVENTS AND GROUP MEMBERS -->
-        <div class="row text-center mt-4">
-          <div class="col-md-6 offset-md-0" style="padding-bottom: 15px;">
-            <!-- LISTA EVENTÓW -->
-            <div class="card">
-              <div class="card-header">
-                Events:
+      </div>
+
+      <!-- ROW FOR EVENTS AND GROUP MEMBERS -->
+      <div class="row text-center mt-4">
+        <div class="col-md-6 offset-md-0" style="padding-bottom: 15spx;">
+          <!-- LISTA EVENTÓW -->
+          <div class="card">
+            <div class="card-header">
+              Events:
+            </div>
+            <div class="card-body overflow-auto" style="max-height:300px;">
+              {% for event in events %}
+              <div class="button-wrapper">
+                <button class="btn btn-secondary event-button wrapped-button" data-title="{{ event.title }}"
+                  data-id="{{ event.id }}" data-start="{{ event.start }}" data-end="{{ event.end }}"><a
+                    class="nav-link">{{ event.title}}</a></button>
               </div>
-              <div class="card-body overflow-auto" style="max-height:300px;">
-                {% for event in events %}
-                <div class="button-wrapper">
-                  <button class="btn btn-secondary event-button wrapped-button" data-title="{{ event.title }}"
-                    data-id="{{ event.id }}" data-start="{{ event.start }}" data-end="{{ event.end }}"><a
-                      class="nav-link">{{ event.title}}</a></button>
-                </div>
-                {% endfor %}
-              </div>
+              {% endfor %}
             </div>
           </div>
+        </div>
 
-          <div class="col-md-6" style="padding-bottom: 15px;">
-            <!-- LISTA USERÓW W DANEJ GRUPIE -->
-            <div class="card">
-              <div class="card-header">
-                Group members:
+        <div class="col-md-6" style="padding-bottom: 15px;">
+          <!-- LISTA USERÓW W DANEJ GRUPIE -->
+          <div class="card">
+            <div class="card-header">
+              Group members:
+            </div>
+            <div class="card-body overflow-auto" style="max-height: 300px;">
+              {% for user in users %}
+              <div class="button-wrapper">
+                <button class="btn btn-secondary user-button wrapped-button" data-nickname="{{ user.nickname }}"
+                  data-email="{{ user.email }}" data-user_id="{{ user.id }}" data-group_id="{{ group.id }}"><a
+                    class="nav-link">{{ user.nickname }}</a></button>
               </div>
-              <div class="card-body overflow-auto" style="max-height: 300px;">
-                {% for user in users %}
-                <div class="button-wrapper">
-                  <button class="btn btn-secondary user-button wrapped-button" data-nickname="{{ user.nickname }}"
-                    data-email="{{ user.email }}" data-user_id="{{ user.id }}" data-group_id="{{ group.id }}"><a
-                      class="nav-link">{{ user.nickname }}</a></button>
-                </div>
-                {% endfor %}
-              </div>
+              {% endfor %}
             </div>
           </div>
         </div>
@@ -85,93 +88,95 @@
     </div>
   </div>
 </div>
-
-
-
-  
-
-  <!-- LISTA EVENTÓW -->
-  <!--
-  <div class="row text-center mt-4">
-    <div class="col-md-8 offset-md-2">
-      <div class="card">
-        <div class="card-header">
-          <h5>Subtasks yet to be completed:</h5>
+<div class="row text-center mt-4">
+  <div class="col-md-8 offset-md-2">
+    <div class="card">
+      <div class="card-header">
+        <h5>Subtasks yet to be completed:</h5>
+      </div>
+      <div class="card-body overflow-auto" style="max-height: 380px;">
+        {% for event in events %}
+        <div class="evnt">
+          <h3>{{ event.title }}</h3>
         </div>
-        <div class="card-body overflow-auto" style="max-height: 380px;">
-          {% for event in events %}
-          <div class="evnt">
-            <h3>{{ event.title }}</h3>
-          </div>
-          {% for subtask in event.subtasks %}
-          {% if subtask.is_completed == False%}
-          <div class ="subtsk">
+        {% for subtask in event.subtasks %}
+        {% if subtask.is_completed == False%}
+        <div class="subtsk">
           <li>{{ subtask.title }}</li>
-          </div>
-          {% endif %}
-          {% endfor %}
-          {% endfor %}
         </div>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
       </div>
     </div>
-</div>
--->
-
-
-
-    <!--MODAL DO EVENTU-->
-    <div class="modal fade" id="event-popup" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title mx-auto"></h5>
-          </div>
-          <div class="modal-body">
-            <p><span class="event-start"></span> - <span class="event-end"></span></p>
-            <div class="row">
-              <div class="col-6">
-                <h6>All users:</h6>
-                <ul class="list-group list-group-flush overflow-auto user-list"></ul>
-              </div>
-              <div class="col-6">
-                <h6>Users assigned to task:</h6>
-                <ul class="list-group list-group-flush overflow-auto event-users"></ul>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="alert-container mx-auto"></div>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--MODAL DO USERA-->
-    <div class="modal fade" id="user-popup" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title mx-auto">User details</h5>
-          </div>
-          <div class="modal-body mx-auto">
-            <h5 class="modal-user-nickname"></h5>
-            <h5 class="modal-user-email"></h5>
-          </div>
-          <div class="modal-footer">
-            {% if poss_admin.is_admin %}
-            <form class="kick_user_form" action="{{ url_for('panel.kick_out_of_group') }}" method="POST">
-            </form>
-            <form class="make_admin_user_form" action="{{ url_for('panel.make_admin') }}" method="POST">
-            </form>
-            {% endif %}
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
+</div>
+
+</div>
+
+
+
+
+
+<!-- LISTA EVENTÓW -->
+
+
+
+
+
+<!--MODAL DO EVENTU-->
+<div class="modal fade" id="event-popup" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mx-auto"></h5>
+      </div>
+      <div class="modal-body">
+        <p><span class="event-start"></span> - <span class="event-end"></span></p>
+        <div class="row">
+          <div class="col-6">
+            <h6>All users:</h6>
+            <ul class="list-group list-group-flush overflow-auto user-list"></ul>
+          </div>
+          <div class="col-6">
+            <h6>Users assigned to task:</h6>
+            <ul class="list-group list-group-flush overflow-auto event-users"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="alert-container mx-auto"></div>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--MODAL DO USERA-->
+<div class="modal fade" id="user-popup" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mx-auto">User details</h5>
+      </div>
+      <div class="modal-body mx-auto">
+        <h5 class="modal-user-nickname"></h5>
+        <h5 class="modal-user-email"></h5>
+      </div>
+      <div class="modal-footer">
+        {% if poss_admin.is_admin %}
+        <form class="kick_user_form" action="{{ url_for('panel.kick_out_of_group') }}" method="POST">
+        </form>
+        <form class="make_admin_user_form" action="{{ url_for('panel.make_admin') }}" method="POST">
+        </form>
+        {% endif %}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
 </div>
 {% endblock %}
 

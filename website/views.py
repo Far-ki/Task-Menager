@@ -27,10 +27,6 @@ def home():
 def calendar():
     return render_template('calendar.html',user = current_user)
 
-@views.route('/group_calendar')
-def group_calendar():
-    return render_template('calendar.html',user = current_user)
-
 @views.route('/groups')
 def groups():
     user=current_user
@@ -54,24 +50,15 @@ def view_admin_panel():
 
     event_subtasks = {}
     
-    # Loop through events and get subtasks for each event
     for event in events:
-        subtasks = Subtask.query.filter_by(event_id=event.id).all()
-        subtask_data = [subtask.as_dict() for subtask in subtasks]
-        event_subtasks[event.id] = subtask_data
+      subtasks = Subtask.query.filter_by(event_id=event.id).all()
+      subtask_data = [subtask.as_dict() for subtask in subtasks]
+      event_subtasks[event.id] = subtask_data
 
     print(event_subtasks)
 
-    return render_template('adminPanel.html',user=current_user, group=group,users=users, events=events, event_user=event_user_data, poss_admin=poss_admin, users_data=users_data,event_subtasks=event_subtasks)
+    return render_template('adminPanel.html',user=current_user, group=group,users=users, events=events, event_user=event_user_data, poss_admin=poss_admin, users_data=users_data,event_subtasks=event_subtasks,group_id = group_id)
 
-@views.route('/get_subtasks')
-@login_required
-def get_subtasks():
-    event_id = request.args.get('event_id')
-    event = Event.query.get(event_id)
-    subtasks = event.subtasks
-    subtask_data = [subtask.as_dict() for subtask in subtasks]
-    return jsonify(subtask_data)
 
 @views.route('/add_user_to_event', methods=['POST'])
 def add_user_to_event():
