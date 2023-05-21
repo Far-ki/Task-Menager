@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}My Calendar{% endblock %}
+{% block title %}Group Calendar{% endblock %}
 
 {% block styles %}
 <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css'/>
@@ -9,8 +9,8 @@
 
 {% block content %}
   <div class="row">
-    <div class="col-md-8 col-lg-8 col-xl-9 pr-sm-3 pr-md-0 mb-3">
-      <h1>My Calendar</h1>
+    <div class="col-md-8 col-lg-8 col-xl-9 pr-sm-3 pr-md-0 mb-3 call_title" data-group_id="{{group.id}}">
+      <h1>Calendar of group "{{group.name}}"</h1>
       <div id='calendar'></div>
     </div>
     <div class="col-md-4 col-lg-4 col-xl-3 mb-3">
@@ -19,7 +19,7 @@
           Add Event
         </div>
         <div class="card-body">
-          <form id="event_add" method="post" action="{{ url_for('event.create_event') }}">
+            <form id="event_add" method="post" action="{{ url_for('event.create_event') }}">
             <div class="form-group">
               <label>Title</label>
               <input class="form-control" id="event_title" name="event_title" placeholder="Event title"/>
@@ -43,6 +43,7 @@
                 <label class="form-check-label" for="completed">Completed</label>
               </div>
             </div>
+            <input type="hidden" id="g_id" name="g_id" value="{{ group.id }}"/>
             <input type="hidden" id="event_id" name="event_id">
 			      <input type="hidden" id="is_completed" name="is_completed" value="0">
             <button type="submit" id="add-event-btn" class="btn btn-primary btn-block mt-5">Add Event</button>
@@ -50,6 +51,7 @@
 
           <form id="event_del" class="mt-3" style="display: none;" method="post"
             action="{{ url_for('event.delete_event') }}">
+            <input type="hidden" id="g_id2" name="g_id" value="{{ group.id }}"/>
             <input type="hidden" id="event_id2" name="event_id">
             <button type="submit" id="del-event-btn" class="btn btn-danger btn-block">Delete Event</button>
           </form>
@@ -66,7 +68,9 @@
 
   <script>
     $(document).ready(function () {
-      var calendar = $('#calendar').fullCalendar({
+        var element = document.querySelector('.call_title');
+        var group_id = element.dataset.group_id;
+        var calendar = $('#calendar').fullCalendar({
         header: {
           left: 'prev,next today',
           center: 'title',
@@ -74,7 +78,13 @@
         },
         defaultView: 'month',
         editable: true,
-        events: '/events',
+        eventSources:
+        [
+            {
+                url: '/group_events',
+                data: {group_id: group_id}
+            }
+         ],
         selectable: true,
         height: 'parent',
         themeSystem: 'bootstrap4',
@@ -128,6 +138,8 @@
           $("#event_del").hide();
         },
         eventClick: function (calEvent, jsEvent, view) {
+          var element = document.querySelector('.call_title');
+          var group_id = element.dataset.group_id;
           $("#event_id").val(calEvent.id);
           $("#event_id2").val(calEvent.id);
           $("#event_title").val(calEvent.title);
@@ -147,7 +159,7 @@
           if (!confirm("Are you sure about this change?")) {
             revertFunc();
           } else {
-            $.post("{{ url_for('event.update_event') }}", { event_id: event.id, event_title: event.title, date_from: event.start.format(), date_to: event.end.format(), description: event.description, is_completed: event.completed, completed: Boolean(event.completed)});
+            $.post("{{ url_for('event.update_event') }}", { event_id: event.id, event_title: event.title, date_from: event.start.format(), date_to: event.end.format(), description: event.description,g_id: group_id ,is_completed: event.completed, completed: Boolean(event.completed)});
             $("#date_from").val(event.start.format('YYYY-MM-DD HH:mm'));
             $("#date_to").val(event.end.format('YYYY-MM-DD HH:mm'));
             $("#description").val(event.description);
