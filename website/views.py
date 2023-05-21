@@ -16,7 +16,7 @@ def home():
     if current_user.is_authenticated:
         subtasks = {}
         now = datetime.now()
-        personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+        personalTop5 = Event.query.filter_by(user_id=current_user.id,group_id=None).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
         for event in personalTop5:
             subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
         return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
