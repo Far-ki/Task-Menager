@@ -93,25 +93,26 @@
 				<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{
 						event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
 			</blockquote>
-
-			<ul>
-				{% for subtask in subtasks[event.id] %}
-				<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }}
-					<div class="form-check">
-						<input class="form-check-input sub_checkbox" type="checkbox" value="" id="is_completed"
-							name="is_completed" data-is_completed="{{subtask.is_completed}}"
-							data-sub_id="{{ subtask.id }}">
-						<label class="form-check-label" for="is_completed">
-							Completed
-						</label>
-					</div>
-				</li>
-				{% endfor %}
-			</ul>
+			<div class="container-ul">
+				<ul>
+					{% for subtask in subtasks[event.id] %}
+					<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }}
+						<div class="form-check">
+							<input class="form-check-input sub_checkbox" type="checkbox" value="" id="is_completed"
+								name="is_completed" data-is_completed="{{subtask.is_completed}}"
+								data-sub_id="{{ subtask.id }}">
+							<label class="form-check-label" for="is_completed">
+								Completed
+							</label>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
 		</div>
 		<div class="col-md-2">
 			<span>
-				User
+				{{current_user.nickname}}
 			</span>
 		</div>
 		<div class="col-md-2">
@@ -123,11 +124,11 @@
 				{% if hours <= 24 %} {{ hours }} H {{ minutes }} M {% else %} {{ (event.end- now).days }} dni {% endif
 					%} </div>
 					<div class="col-md-2">
-
-						{% if event.end- now <= now-now %} <span class="badge badge-pill badge-warning">Closed</span>
-			{% elif event.end- now > now-now %}
-			<span class="badge badge-pill badge-success">In Progress</span>
-			{% endif %}
+						{% if now < event.start %} <span class="badge badge-pill badge-danger">New</span>
+			{% elif start <= now and now <=end %} <span class="badge badge-pill badge-success">In Progress</span>
+				{% else %}
+				<span class="badge badge-pill badge-warning">Closed</span>
+				{% endif %}
 		</div>
 		<div class="col-md-2 div_bar">
 
@@ -193,7 +194,7 @@
 
 		<div class="col-md-2">
 			<span>
-				User
+				{{current_user.nickname}}
 			</span>
 		</div>
 		<div class="col-md-2">
@@ -208,10 +209,13 @@
 		</div>
 		<div class="col-md-2">
 
-			{% if event.end- now <= now-now %} <span class="badge badge-pill badge-warning">Closed</span>
-				{% elif event.end- now > now-now %}
-				<span class="badge badge-pill badge-success">In Progress</span>
-				{% endif %}
+
+			{% if now < start %} <span class="badge badge-pill badge-danger">New</span>
+				{% elif start <= now and now <=end %} <span class="badge badge-pill badge-success">In Progress</span>
+					{% else %}
+					<span class="badge badge-pill badge-warning">Closed</span>
+					{% endif %}
+
 		</div>
 		<div class="col-md-2 div_bar">
 
@@ -284,30 +288,12 @@
 		var html_1 = '<div class="progress" style="height: 20px;"><div class="progress-bar" role="progressbar" style="width: ' + temp + '%;" aria-valuenow="' + temp + '"aria-valuemin="0" aria-valuemax="100">' + temp + '%</div></div>'
 
 		$('.div_bar').html(html_1);
-		
-
-
-	});
-
-	document.addEventListener('DOMContentLoaded', function () {
-
-		var elements = document.querySelectorAll('.sub_checkbox ');
-
-		for (var i = 0; i < elements.length; i++) {
-
-			elements[i].addEventListener('change', function () {
-				var isChecked = this.checked;
-
-				var subtaskId = this.dataset.sub_id;
-				updateSubtask(subtaskId, isChecked);
-
-			})
-
-		}
 
 
 
 	});
+
+
 
 	function updateSubtask(subtaskId, isChecked) {
 		var xhr = new XMLHttpRequest();
@@ -326,7 +312,8 @@
 			id: subtaskId,
 			is_completed: isChecked
 		}));
-		
+		location.reload();
+
 	}
 
 	window.onload = function () {
@@ -342,7 +329,7 @@
 
 
 		}
-		
+
 
 	};
 
