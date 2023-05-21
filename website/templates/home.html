@@ -19,7 +19,7 @@
 			<span>Assigned to</span>
 		</div>
 		<div class="col-md-2">
-			<span>Est. Hours</span>
+			<span>Est. Time</span>
 		</div>
 		<div class="col-md-2">
 			<span>Status</span>
@@ -38,7 +38,6 @@
 	</div>
 	<hr>
 	{% for event in personalTop5 %}
-	{% if event.start.date() == event.end.date() %}
 
 
 	<div class="row">
@@ -51,7 +50,7 @@
 
 			<blockquote class="blockquote mb-4">
 
-				<button type="button" class="btn btn-primary" data-toggle="modal"
+				<button type="button" class="btn btn-primary eventid_helper" data-toggle="modal"
 					data-target="#createSubtaskModal{{ event.id }}" data-eventid="{{ event.id }}">Create
 					Subtask</button>
 
@@ -93,22 +92,21 @@
 				<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{
 						event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
 			</blockquote>
-			<div class="container-ul">
-				<ul>
-					{% for subtask in subtasks[event.id] %}
-					<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }}
-						<div class="form-check">
-							<input class="form-check-input sub_checkbox" type="checkbox" value="" id="is_completed"
-								name="is_completed" data-is_completed="{{subtask.is_completed}}"
-								data-sub_id="{{ subtask.id }}">
-							<label class="form-check-label" for="is_completed">
-								Completed
-							</label>
-						</div>
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
+
+			<ul>
+				{% for subtask in subtasks[event.id] %}
+				<li class="is_completed" data-is="{{subtask.is_completed}}">{{ subtask.title }}
+					<div class="form-check">
+						<input class="form-check-input sub_checkbox" type="checkbox" value="" id="is_completed"
+							name="is_completed" data-is_completed="{{subtask.is_completed}}"
+							data-sub_id="{{ subtask.id }}">
+						<label class="form-check-label" for="is_completed">
+							Completed
+						</label>
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
 		</div>
 		<div class="col-md-2">
 			<span>
@@ -121,7 +119,7 @@
 				{% set hours = duration_seconds // 3600 %}
 				{% set minutes = (duration_seconds % 3600) // 60 %}
 				{% set seconds = duration_seconds % 60 %}
-				{% if hours <= 24 %} {{ hours }} H {{ minutes }} M {% else %} {{ (event.end- now).days }} dni {% endif
+				{% if hours <= 24 %} {{ hours | int }}h {{ minutes | int }}m {% else %} {{ (event.end- now).days }}d {% endif
 					%} </div>
 					<div class="col-md-2">
 						{% if now < event.start %} <span class="badge badge-pill badge-danger">New</span>
@@ -130,9 +128,11 @@
 				<span class="badge badge-pill badge-warning">Closed</span>
 				{% endif %}
 		</div>
-		<div class="col-md-2 div_bar">
-
-		</div>
+		<div class="col-md-2 div_bar" data-ev_id="{{ event.id }}">
+			<div class="progress">
+			  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"><span>0%</span></div>
+			</div>
+		  </div>
 	</div>
 
 	{% else %}
@@ -194,7 +194,7 @@
 
 		<div class="col-md-2">
 			<span>
-				{{current_user.nickname}}
+				User
 			</span>
 		</div>
 		<div class="col-md-2">
@@ -209,13 +209,10 @@
 		</div>
 		<div class="col-md-2">
 
-
-			{% if now < start %} <span class="badge badge-pill badge-danger">New</span>
-				{% elif start <= now and now <=end %} <span class="badge badge-pill badge-success">In Progress</span>
-					{% else %}
-					<span class="badge badge-pill badge-warning">Closed</span>
-					{% endif %}
-
+			{% if event.end- now <= now-now %} <span class="badge badge-pill badge-warning">Closed</span>
+				{% elif event.end- now > now-now %}
+				<span class="badge badge-pill badge-success">In Progress</span>
+				{% endif %}
 		</div>
 		<div class="col-md-2 div_bar">
 
@@ -258,42 +255,107 @@
 <script>
 
 
+function updateProgress(progressBarIndex, value) {
+  var progressBars = document.querySelectorAll('.div_bar');
+  if (progressBarIndex < progressBars.length) {
+    var progressBar = progressBars[progressBarIndex].querySelector('.progress-bar');
+    progressBar.style.width = value + '%';
+    progressBar.setAttribute('aria-valuenow', value);
+    progressBar.querySelector('span').textContent = value + '%';
+  }
+}
+
 	$(document).ready(function () {
 		var isCompletedList = [];
+		var eventIdList =[];
 
+		$('.eventid_helper').each(function () {
+			var tempId = $(this).data('eventid');
+			eventIdList.push(tempId);
+		});
+		console.log(eventIdList);
 
 		$('.is_completed').each(function () {
 			var isCompleted = $(this).data('is');
-			isCompletedList.push(isCompleted);
+			var checkboxEventId = $(this).data('event_id')
+			isCompletedList.push([isCompleted, checkboxEventId]);
 		});
+		console.log(isCompletedList);
 
 
-		var count_true = 0;
-		var count_false = 0;
 
-		for (var i = 0; i < isCompletedList.length; i++) {
-			if (isCompletedList[i].toString() === "True") {
-				count_true++;
+		for(var i = 0; i < eventIdList.length; i++)
+		{
+			var counter = 0;
+			var count_true = 0;
+			var count_false = 0;
+
+			for (var j = 0; j < isCompletedList.length; j++)
+			{
+				
+				var pair = isCompletedList[j];
+
+				if(pair[1] == eventIdList[i])
+				{
+					counter++;
+					if (pair[0].toString() === "True")
+					{
+						count_true++;
+					}
+					if (pair[0] === "False")
+					{
+						count_false++;
+					}
+				}
+				else
+				{
+					continue;
+				}
 			}
-			if (isCompletedList[i] === "False") {
-				count_false++;
+			let value;
+			value = (count_true / counter) * 100
+			if (count_true == 0) 
+			{
+				value = 0;
 			}
-		}
-		let temp;
-		temp = (count_true / isCompletedList.length) * 100
-		temp = temp.toFixed(2)
-		if (count_true == 0) {
-			temp = 0;
+			value = value.toFixed(2)
+
+			var progressBarsList = document.querySelectorAll('.div_bar');
+			for(var g=0;g<progressBarsList.length;g++)
+			{
+				if(progressBarsList[g].dataset.ev_id==eventIdList[i])
+				{
+					updateProgress(g, value);
+				}
+			}
 		}
 		var html_1 = '<div class="progress" style="height: 20px;"><div class="progress-bar" role="progressbar" style="width: ' + temp + '%;" aria-valuenow="' + temp + '"aria-valuemin="0" aria-valuemax="100">' + temp + '%</div></div>'
 
 		$('.div_bar').html(html_1);
-
+		
 
 
 	});
 
+	document.addEventListener('DOMContentLoaded', function () {
 
+		var elements = document.querySelectorAll('.sub_checkbox ');
+
+		for (var i = 0; i < elements.length; i++) {
+
+			elements[i].addEventListener('change', function () {
+				var isChecked = this.checked;
+
+				var subtaskId = this.dataset.sub_id;
+				updateSubtask(subtaskId, isChecked);
+
+			})
+
+		}
+
+
+
+	});
 
 	function updateSubtask(subtaskId, isChecked) {
 		var xhr = new XMLHttpRequest();
@@ -326,10 +388,8 @@
 			if (isCompleted === "True") {
 				checkbox.checked = true;
 			}
-
-
 		}
-
+		
 
 	};
 

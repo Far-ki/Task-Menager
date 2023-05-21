@@ -44,6 +44,7 @@ class Event(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = True)
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable = True)
     is_completed = db.Column(db.Boolean, default = False)
+    subtasks = db.relationship('Subtask', backref='event', lazy=True)
     
     def as_dict(self):
         return {
@@ -51,9 +52,9 @@ class Event(db.Model):
             'title': self.title,
             'start': self.start.isoformat(),
             'end': self.end.isoformat() if self.end else None,
+            'Completed': self.is_completed,
             'description': self.description,
-            'completed': self.completed,
-            'Completed': self.is_completed
+            'completed': self.completed
         }
 
 class Subtask(db.Model):
@@ -62,4 +63,15 @@ class Subtask(db.Model):
     description = db.Column(db.String(200))
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     is_completed = db.Column(db.Boolean, default = False)
+
+    
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'event_id': self.event_id,
+            'is_completed': self.is_completed
+        }
+
 

@@ -17,13 +17,14 @@ def create_event():
     date_to = request.form.get('date_to')
     description = request.form.get('description')
     completed = request.form.get('is_completed')
+    #user_id = 'completed' in request.form
     user_id = current_user.id
     group_id = request.form.get('Group_id')
-   
+    
     if group_id:
-        event = Event(title=event_title, start=date_from, end=date_to,user_id=user_id, description=description, completed=completed, group_id=group_id)
+        event = Event(title=event_title, start=date_from, end=date_to, user_id=user_id, group_id=group_id,description=description,completed=completed)
     else:
-        event = Event(title=event_title, start=date_from, end=date_to,user_id=user_id, description=description, completed=completed)
+        event = Event(title=event_title, start=date_from, end=date_to, user_id=user_id,description=description,completed=completed)
         
     db.session.add(event)
     db.session.commit()
@@ -48,6 +49,9 @@ def delete_event():
     try:
         event_id = request.form.get('event_id')
         event = Event.query.filter_by(id=event_id).first()
+
+        db.session.query(Subtask).filter(Subtask.event_id == event_id).delete()
+        #db.session.commit()
         db.session.delete(event)
         db.session.commit()
     except:

@@ -1,6 +1,6 @@
 
 body {
-	background:#f5f5f5;
+	background:#F5F5F5;
 }
 
 html, body, .container-fluid {
@@ -8,7 +8,6 @@ html, body, .container-fluid {
 
 	padding-left: 0px;
 	padding-right: 0px;
-	
 
 }
 
@@ -72,7 +71,6 @@ html, body, .container-fluid {
 	top:10px;
 } */
 
-
 .sidebar .nav-item, .navbar {
 	border-bottom: none;
 }
@@ -107,8 +105,8 @@ html, body, .container-fluid {
 	background-color: #555;
 	color: white;
 }
-
-	@media screen and (max-width: 1000px) {
+	  
+	@media screen and (max-width: 900px) {
 		.sidebar {
 		  width: 100%;
 		  height: auto;
@@ -450,29 +448,10 @@ html, body, .container-fluid {
 	flex:2;
 }
 
-
-#description {
-	height: 150px;
-}
-
-#description + p {
-	margin-top: 3px;
-	font-size: 65%;
-}
-
-nav + .row > .col {
-	min-height: 92vh;
-}
-
-.completed-event {
-	background-color: #04AA6D !important;
-}
-
-
 .button-container {
     display: flex;
     flex-direction: column;
-  }
+}
   
   .button-wrapper {
     margin-bottom: 8px;
@@ -495,7 +474,6 @@ nav + .row > .col {
 	padding:30px 20px 20px;
 	background-color: white;
 	position: relative;
-	height: auto;
 }
 .status
 {
@@ -512,13 +490,13 @@ hr {
 	padding: 0;
   }
 
-  h4 {
+h4 {
 	font-family: 'Montserrat', sans-serif;
 	font-size: 3rem;
 	font-weight: 700;
 	letter-spacing: 1px;
 	text-transform: uppercase;
-  }
+}
 
   .overflow-auto {
 	overflow-y: auto;
@@ -534,6 +512,7 @@ hr {
 	margin-right: 27%;
   }
 
+<<<<<<< HEAD
 
   .container-ul {
 	height: 100px; 
@@ -544,4 +523,51 @@ hr {
 	list-style: none;
 	padding: 0;
 	margin: 0;
+=======
+#description {
+	height: 100px;
+}
+
+#description + p {
+	margin-top: 3px;
+	font-size: 65%;
+}
+
+nav + .row > .col {
+	min-height: 92vh;
+}
+
+.completed-event {
+	background-color: #04AA6D !important;
+}
+
+/**
+ * Progress bars with centered text
+ */
+
+ .progress {
+    position: relative;
+}
+
+.progress span {
+    position: absolute;
+    display: block;
+    width: 100%;
+    color: black;
+ }
+
+ .evnt
+ {
+	display: flex;
+	justify-content: left;
+ }
+ .subtsk
+ {
+	display: flex;
+ }
+
+  .wrapped-button {
+    width: 200px; /* Adjust the width as needed */
+    white-space: normal;
+>>>>>>> 9f3e4513c47aa6431b74b31570bf78f9c0f774a0
   }
