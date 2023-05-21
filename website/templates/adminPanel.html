@@ -30,7 +30,7 @@
                   Tools
                 </div>
                 <div class="card-body" style="height: 100px; display: flex; justify-content: center; align-items: center;">
-                  <a href="/group_calendar" class="btn btn-primary" style="width: 150px; margin-right: 10px;">
+                  <a href="{{ url_for('views.group_calendar', group_id=group.id) }}" class="btn btn-primary" style="width: 150px; margin-right: 10px;">
                     <i class="fa fa-calendar" aria-hidden="true"></i> Calendar
                   </a>
                 
@@ -91,7 +91,7 @@
   
 
   <!-- LISTA EVENTÓW -->
-  <!--
+  
   <div class="row text-center mt-4">
     <div class="col-md-8 offset-md-2">
       <div class="card">
@@ -115,7 +115,7 @@
       </div>
     </div>
 </div>
--->
+
 
 
 
