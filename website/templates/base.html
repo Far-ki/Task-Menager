@@ -67,21 +67,6 @@
       </div>
     </nav>
 
-<<<<<<< HEAD
-
-    {% if user.is_authenticated %}
-    <div class="sidebar">
-
-      <!-- sidebar -->
-
-        <a class="nav-link" href="#"><i class="fa fa-user-circle" aria-hidden="true"></i> Dashboard</a>
-        <a class="nav-link" href="/calendar" role="button" aria-haspopup="true" aria-expanded="false"><i
-            class="fa fa-calendar" aria-hidden="true"></i> Calendary</a>
-        <a class="nav-link" href="/" role="button" aria-haspopup="true" aria-expanded="false"><i
-            class="fa fa-calendar" aria-hidden="true"></i> Tasks</a>
-        <a class="nav-link" href="/groups" role="button" aria-haspopup="true" aria-expanded="false"><i
-            class="fa fa-handshake-o" aria-hidden="true"></i> Groups</a>
-=======
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
       messages %} {% for category, message in messages %} {% if category ==
@@ -118,30 +103,7 @@
       <div class="col mt-2 p-0">
         {% block content %} {% endblock %}
       </div>
->>>>>>> 9f3e4513c47aa6431b74b31570bf78f9c0f774a0
     </div>
-    {% endif %}
-
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %} {% if category ==
-    'error' %}
-    <div class="alert alert-danger alter-dismissable fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% else %}
-    <div class="alert alert-success alter-dismissable fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %}
-
-
-    {% block content %} {% endblock %}
   </div>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
