@@ -1,7 +1,7 @@
 from .models import Event
 from flask import request,jsonify,Blueprint,redirect,url_for,render_template,flash
 from . import db
-from .models import Subtask,Event
+from .models import Subtask,Event, User, event_user
 from flask_login import login_user, login_required, logout_user, current_user
 event = Blueprint('event', __name__)
 
@@ -78,6 +78,46 @@ def delete_event():
     else:
         return redirect(url_for('views.calendar'))
 
+@event.route('/remove_user_from_event', methods=['POST'])
+def remove_user_from_event():
+  nickname = request.form['nickname']
+  event_id = request.form['event_id']
+  event_id = int(event_id)
+  event = Event.query.get(event_id)
+
+  if event is None:
+    return jsonify({'success': False, 'error': 'Event not found'})
+
+  user = User.query.filter_by(nickname=nickname).first()
+
+  if user is None:
+    return jsonify({'success': False, 'error': 'User not found'})
+
+  event.user_events.remove(user)
+  db.session.commit()
+
+  return jsonify({'success': True})
+
+@event.route('/add_user_to_event', methods=['POST'])
+def add_user_to_event():
+  nickname = request.form['nickname']
+  event_id = request.form['event_id']
+  event_id = int(event_id)
+  event = Event.query.get(event_id)
+
+  if event is None:
+    return jsonify({'success': False, 'error': 'Event not found'})
+
+  user = User.query.filter_by(nickname=nickname).first()
+
+  if user is None:
+    return jsonify({'success': False, 'error': 'User not found'})
+
+  event.user_events.append(user)
+  db.session.commit()
+
+  return jsonify({'success': True})
+
 @event.route('/create_subtask', methods=['POST'])
 def create_subtask():
     title = request.form.get('subtask-title')
@@ -92,3 +132,12 @@ def create_subtask():
     db.session.commit()
 
     return redirect(url_for('views.home'))
+
+@event.route('/update_subtask', methods=['POST'])
+def update_subtask():
+    subtask_id = request.json['id']
+    is_completed = request.json['is_completed']
+    subtask = Subtask.query.get(subtask_id)
+    subtask.is_completed = is_completed
+    db.session.commit()
+    return jsonify({'message': 'Subtask updated successfully.'})

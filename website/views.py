@@ -16,7 +16,7 @@ def home():
     if current_user.is_authenticated:
         subtasks = {}
         now = datetime.now()
-        personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+        personalTop5 = Event.query.filter_by(user_id=current_user.id,group_id=None).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
         for event in personalTop5:
             subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
         return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
@@ -74,53 +74,3 @@ def get_subtasks():
     subtasks = event.subtasks
     subtask_data = [subtask.as_dict() for subtask in subtasks]
     return jsonify(subtask_data)
-
-@views.route('/add_user_to_event', methods=['POST'])
-def add_user_to_event():
-  nickname = request.form['nickname']
-  event_id = request.form['event_id']
-  event_id = int(event_id)
-  event = Event.query.get(event_id)
-
-  if event is None:
-    return jsonify({'success': False, 'error': 'Event not found'})
-
-  user = User.query.filter_by(nickname=nickname).first()
-
-  if user is None:
-    return jsonify({'success': False, 'error': 'User not found'})
-
-  event.user_events.append(user)
-  db.session.commit()
-
-  return jsonify({'success': True})
-
-
-@views.route('/remove_user_from_event', methods=['POST'])
-def remove_user_from_event():
-  nickname = request.form['nickname']
-  event_id = request.form['event_id']
-  event_id = int(event_id)
-  event = Event.query.get(event_id)
-
-  if event is None:
-    return jsonify({'success': False, 'error': 'Event not found'})
-
-  user = User.query.filter_by(nickname=nickname).first()
-
-  if user is None:
-    return jsonify({'success': False, 'error': 'User not found'})
-
-  event.user_events.remove(user)
-  db.session.commit()
-
-  return jsonify({'success': True})
-
-@views.route('/update_subtask', methods=['POST'])
-def update_subtask():
-    subtask_id = request.json['id']
-    is_completed = request.json['is_completed']
-    subtask = Subtask.query.get(subtask_id)
-    subtask.is_completed = is_completed
-    db.session.commit()
-    return jsonify({'message': 'Subtask updated successfully.'})
