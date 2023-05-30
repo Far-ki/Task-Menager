@@ -1,10 +1,10 @@
 from flask import request,jsonify,Blueprint,redirect,url_for,render_template,flash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-from .models import Group,group_membership,User, event_user
-from sqlalchemy import update, and_
+from .models import Group,group_membership,User, event_user,Event,Subtask
+from sqlalchemy import update, and_,asc
 panel = Blueprint('panel', __name__)
-
+from datetime import datetime
 
 
 
@@ -58,3 +58,21 @@ def make_admin():
     else:
         flash("You can't do this!")
     return redirect(url_for('views.view_admin_panel',group_id = group_id))
+
+
+@panel.route('/adminPanel/showTasks', methods = ['POST'])
+@login_required
+def show_tasks():
+    user_id = current_user.id
+    user = User.query.get(user_id)
+    group_id = request.form.get('group_id')
+    group = Group.query.get(group_id)
+    flash(user_id)
+    if current_user.is_authenticated:
+        subtasks = {}
+        now = datetime.now()
+        personalTop5 = Event.query.filter_by(group_id = group_id).filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+        for event in personalTop5:
+            subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
+        return render_template('check.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
+

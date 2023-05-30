@@ -27,6 +27,7 @@ def home():
 def calendar():
     return render_template('calendar.html',user = current_user)
 
+
 @views.route('/group_calendar')
 def group_calendar():
     group_id = request.args.get('group_id')
@@ -56,16 +57,65 @@ def view_admin_panel():
 
     event_subtasks = {}
     
-    # Loop through events and get subtasks for each event
     for event in events:
-        subtasks = Subtask.query.filter_by(event_id=event.id).all()
-        subtask_data = [subtask.as_dict() for subtask in subtasks]
-        event_subtasks[event.id] = subtask_data
+      subtasks = Subtask.query.filter_by(event_id=event.id).all()
+      subtask_data = [subtask.as_dict() for subtask in subtasks]
+      event_subtasks[event.id] = subtask_data
 
     print(event_subtasks)
 
-    return render_template('adminPanel.html',user=current_user, group=group,users=users, events=events, event_user=event_user_data, poss_admin=poss_admin, users_data=users_data,event_subtasks=event_subtasks)
+    return render_template('adminPanel.html',user=current_user, group=group,users=users, events=events, event_user=event_user_data, poss_admin=poss_admin, users_data=users_data,event_subtasks=event_subtasks,group_id = group_id)
 
+@views.route('/add_user_to_event', methods=['POST'])
+def add_user_to_event():
+  nickname = request.form['nickname']
+  event_id = request.form['event_id']
+  event_id = int(event_id)
+  event = Event.query.get(event_id)
+
+  if event is None:
+    return jsonify({'success': False, 'error': 'Event not found'})
+
+  user = User.query.filter_by(nickname=nickname).first()
+
+  if user is None:
+    return jsonify({'success': False, 'error': 'User not found'})
+
+  event.user_events.append(user)
+  db.session.commit()
+
+  return jsonify({'success': True})
+
+
+@views.route('/remove_user_from_event', methods=['POST'])
+def remove_user_from_event():
+  nickname = request.form['nickname']
+  event_id = request.form['event_id']
+  event_id = int(event_id)
+  event = Event.query.get(event_id)
+
+  if event is None:
+    return jsonify({'success': False, 'error': 'Event not found'})
+
+  user = User.query.filter_by(nickname=nickname).first()
+
+  if user is None:
+    return jsonify({'success': False, 'error': 'User not found'})
+
+  event.user_events.remove(user)
+  db.session.commit()
+
+  return jsonify({'success': True})
+
+@views.route('/update_subtask', methods=['POST'])
+def update_subtask():
+    subtask_id = request.json['id']
+    is_completed = request.json['is_completed']
+    subtask = Subtask.query.get(subtask_id)
+    subtask.is_completed = is_completed
+    db.session.commit()
+    return jsonify({'message': 'Subtask updated successfully.'})
+  
 @views.route('/get_subtasks')
 @login_required
 def get_subtasks():
