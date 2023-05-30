@@ -16,7 +16,7 @@ def home():
     if current_user.is_authenticated:
         subtasks = {}
         now = datetime.now()
-        personalTop5 = Event.query.filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+        personalTop5 = Event.query.filter_by(user_id=current_user.id,group_id=None).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
         for event in personalTop5:
             subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
         return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
@@ -26,6 +26,13 @@ def home():
 @views.route('/calendar')
 def calendar():
     return render_template('calendar.html',user = current_user)
+
+
+@views.route('/group_calendar')
+def group_calendar():
+    group_id = request.args.get('group_id')
+    group = Group.query.get(group_id)
+    return render_template('calendar_group.html',user = current_user, group = group)
 
 @views.route('/groups')
 def groups():
@@ -58,7 +65,6 @@ def view_admin_panel():
     print(event_subtasks)
 
     return render_template('adminPanel.html',user=current_user, group=group,users=users, events=events, event_user=event_user_data, poss_admin=poss_admin, users_data=users_data,event_subtasks=event_subtasks,group_id = group_id)
-
 
 @views.route('/add_user_to_event', methods=['POST'])
 def add_user_to_event():
@@ -109,3 +115,12 @@ def update_subtask():
     subtask.is_completed = is_completed
     db.session.commit()
     return jsonify({'message': 'Subtask updated successfully.'})
+  
+@views.route('/get_subtasks')
+@login_required
+def get_subtasks():
+    event_id = request.args.get('event_id')
+    event = Event.query.get(event_id)
+    subtasks = event.subtasks
+    subtask_data = [subtask.as_dict() for subtask in subtasks]
+    return jsonify(subtask_data)

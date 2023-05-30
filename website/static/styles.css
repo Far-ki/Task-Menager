@@ -512,6 +512,16 @@ h4 {
 	margin-right: 27%;
   }
 
+
+  .container-ul {
+	height: 100px; 
+	overflow: auto;
+  }
+  
+  ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
 #description {
 	height: 100px;
 }
@@ -557,4 +567,15 @@ nav + .row > .col {
   .wrapped-button {
     width: 200px; /* Adjust the width as needed */
     white-space: normal;
+  }
+
+  .container-ul {
+	height: 100px; 
+	overflow: auto;
+  }
+
+  ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
   }
