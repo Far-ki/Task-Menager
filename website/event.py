@@ -76,21 +76,3 @@ def create_subtask():
     return redirect(url_for('views.home'))
 
 
-
-@event.route('/create_group_subtask', methods=['POST'])
-def create_group_subtask():
-    title = request.form.get('subtask-title')
-    description = request.form.get('subtask-description')
-    event_id = request.form.get('event_id')
-    group_id = request.form.get('group_id')
-    user = current_user
-    flash(event_id)
-
-    event = Event.query.get_or_404(event_id)
-
-    subtask = Subtask(title=title, description=description, event_id=event.id)
-
-    db.session.add(subtask)
-    db.session.commit()
-
-    return redirect(url_for('views.home'))
