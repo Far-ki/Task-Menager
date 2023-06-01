@@ -115,7 +115,22 @@ def update_subtask():
     subtask.is_completed = is_completed
     db.session.commit()
     return jsonify({'message': 'Subtask updated successfully.'})
-  
+
+@views.route('/update_main_event_completion', methods=['POST'])
+def update_main_event_completion():
+    event_id1 = request.json['ev_id']
+    flash(event_id1)
+    is_done = request.json['is_done']
+    event = Event.query.get(event_id1)
+    
+    flash(is_done)
+    if is_done == True:
+      event.completed = 1
+    else:
+       event.completed = 0
+    db.session.commit()
+    return jsonify({'message': 'Subtask updated successfully.'})
+
 @views.route('/get_subtasks')
 @login_required
 def get_subtasks():
