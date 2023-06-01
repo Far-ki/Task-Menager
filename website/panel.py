@@ -67,12 +67,40 @@ def show_tasks():
     user = User.query.get(user_id)
     group_id = request.form.get('group_id')
     group = Group.query.get(group_id)
-    flash(user_id)
+    flash(group_id)
+    # flash(user_id)
+    
     if current_user.is_authenticated:
         subtasks = {}
         now = datetime.now()
-        personalTop5 = Event.query.filter_by(group_id = group_id).filter_by(user_id=current_user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+        personalTop5 = Event.query.filter_by(group_id = group_id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
         for event in personalTop5:
             subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
-        return render_template('check.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
+        return render_template('check.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now,group = group)
 
+
+@panel.route('/adminPanel/create_group_subtask', methods=['POST'])
+def create_group_subtask():
+    title = request.form.get('subtask-title')
+    flash(title)
+    description = request.form.get('subtask-description')
+    event_id = request.form.get('event_id')
+    group_id = request.form.get('group_id')
+    user = current_user
+    flash(group_id)
+
+    event = Event.query.get_or_404(event_id)
+    group = Group.query.get(group_id)
+
+    subtask = Subtask(title=title, description=description, event_id=event.id)
+
+    db.session.add(subtask)
+    db.session.commit()
+
+    subtasks = {}
+    now = datetime.now()
+    personalTop5 = Event.query.filter_by(group_id = group_id).filter_by(user_id = user.id).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+    for event in personalTop5:
+        subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
+
+    return render_template('check.html',user = user,personalTop5=personalTop5,subtasks=subtasks,now=now,group = group)
