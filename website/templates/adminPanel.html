@@ -30,9 +30,9 @@
                 <div class="card-header">
                   Tools
                 </div>
-                <div class="card-body"
-                  style="height: 100px; display: flex; justify-content: center; align-items: center;">
-                  <a href="/group_calendar" class="btn btn-primary" style="width: 150px; margin-right: 10px;">
+
+                <div class="card-body" style="height: 100px; display: flex; justify-content: center; align-items: center;">
+                  <a href="{{ url_for('views.group_calendar', group_id=group.id) }}" class="btn btn-primary" style="width: 150px; margin-right: 10px;">
                     <i class="fa fa-calendar" aria-hidden="true"></i> Calendar
                   </a>
 
@@ -98,6 +98,7 @@
         {% for event in events %}
         <div class="evnt">
           <h3>{{ event.title }}</h3>
+
         </div>
         {% for subtask in event.subtasks %}
         {% if subtask.is_completed == False%}
