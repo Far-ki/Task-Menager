@@ -47,6 +47,13 @@
 
 
 			<h5>{{ event.title }}</h5>
+			<div class="form-check">
+                <input class="form-check-input main_checkbox" type="checkbox" value="" id="main_completed"
+                    name="main_completed" data-event_id="{{ event.id }}">
+                <label class="form-check-label" for="main_completed">
+                    Completed
+                </label>
+            </div>
 
 			<blockquote class="blockquote mb-4">
 
@@ -226,6 +233,12 @@ function updateProgress(progressBarIndex, value) {
 					continue;
 				}
 			}
+			 var isCompleted = count_true === counter;
+        	var mainCheckbox = document.querySelector('.main_checkbox[data-event_id="' + eventIdList[i] + '"]');
+        	if (mainCheckbox) {
+            mainCheckbox.checked = isCompleted;
+        	}
+
 			let value;
 			value = (count_true / counter) * 100
 			if (count_true == 0) 
@@ -242,7 +255,10 @@ function updateProgress(progressBarIndex, value) {
 					updateProgress(g, value);
 				}
 			}
+			
 		}
+
+
 	});
 
 	document.addEventListener('DOMContentLoaded', function () {
@@ -280,6 +296,25 @@ function updateProgress(progressBarIndex, value) {
 		}));
 		
 	}
+	// function update_main_event_completion(event_id) {
+	// 	var xhr = new XMLHttpRequest();
+
+	// 	xhr.open('POST', '/update_main_event_completion', true);
+	// 	xhr.setRequestHeader('Content-Type', 'application/json');
+
+	// 	xhr.onreadystatechange = function () {
+	// 		if (xhr.readyState === 4 && xhr.status === 200) {
+	// 			var response = JSON.parse(xhr.responseText);
+	// 			console.log(response.message);
+	// 		}
+	// 	};
+
+	// 	xhr.send(JSON.stringify({
+	// 		id: event_id,
+	// 		is_completed: isChecked
+	// 	}));
+		
+	// }
 
 	window.onload = function () {
 		var checkboxes = document.querySelectorAll('.sub_checkbox');

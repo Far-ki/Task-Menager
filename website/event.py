@@ -76,3 +76,8 @@ def create_subtask():
     return redirect(url_for('views.home'))
 
 
+# def update_main_event_completion(event_id):
+#     event = Event.query.get(event_id)
+#     if all(subtask.is_completed for subtask in event.subtasks) == True:
+#         event.is_completed = True
+#         db.session.commit()
