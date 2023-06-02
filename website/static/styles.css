@@ -417,8 +417,7 @@ html, body, .container-fluid {
 
 .GroupName
 {
-
-	margin: 3px;
+	background-color: white;
 	border-bottom: #555;
 	border-width: 2px;
 	border-style: solid;
@@ -525,6 +524,7 @@ h4 {
 #description {
 	height: 100px;
 }
+
 
 #description + p {
 	margin-top: 3px;
