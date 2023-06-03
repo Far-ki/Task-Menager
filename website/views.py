@@ -16,7 +16,7 @@ def home():
     if current_user.is_authenticated:
         subtasks = {}
         now = datetime.now()
-        personalTop5 = Event.query.filter_by(user_id=current_user.id,group_id=None).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
+        personalTop5 = Event.query.filter_by(user_id=current_user.id,group_id=None,completed=0).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
         for event in personalTop5:
             subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
         return render_template('home.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
@@ -28,10 +28,10 @@ def history():
     if current_user.is_authenticated:
         subtasks = {}
         now = datetime.now()
-        personalTop5 = Event.query.filter_by(user_id=current_user.id,group_id=None).filter(Event.start >= datetime.today()).order_by(asc(Event.start)).limit(5).all()
-        for event in personalTop5:
+        events = Event.query.filter(Event.group_id.is_(None), Event.completed == 1, Event.user_id==current_user.id).all()
+        for event in events:
             subtasks[event.id] = Subtask.query.filter_by(event_id=event.id).order_by(asc(Subtask.id)).all()
-        return render_template('history.html',user = current_user,personalTop5=personalTop5,subtasks=subtasks,now=now)
+        return render_template('history.html',user = current_user,events=events,subtasks=subtasks,now=now)
     else:
         return render_template('history.html',user=current_user)
     
