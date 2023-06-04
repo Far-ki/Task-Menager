@@ -38,8 +38,13 @@
 
                   <form action="{{ url_for('panel.show_tasks') }}" method="POST">
                     <input type="hidden" name="group_id" value="{{ group_id }}">
-                    <button type="submit">Tasks</button>
+                    <button type="submit" class="btn btn-primary" style="margin-right: 10px; height: 38px;"> <i class="fa fa-list"></i>Tasks</button>
                 </form>
+
+                				<form method="POST" action="{{ url_for('panel.group_history') }}">
+					<input type="hidden" name="group_id" value="{{ group_id }}">
+					<button type="submit" class="btn btn-primary"> <i class="fa fa-user-circle" aria-hidden="true"></i>View Group History</button>
+				</form>
                 </div>
               </div>
             </div>

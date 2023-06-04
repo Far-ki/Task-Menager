@@ -73,3 +73,5 @@ def leave_group():
          
     flash(f'You have left the group {group.name}', 'success')
     return redirect(url_for('views.groups'))
+
+

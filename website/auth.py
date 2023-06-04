@@ -38,10 +38,6 @@ def sign_up():
         password2 = request.form.get('password2')
         nickname = request.form.get('nickname')
 
-      #  is_valid = validate_email(email,verify=True)
-       # if not is_valid:
-        #    flash('Invalid email address.', category='error')
-         #   return redirect(url_for('auth.sign_up'))
 
         user = User.query.filter_by(email=email).first()
         user_nickname = User.query.filter_by(nickname=nickname).first()
@@ -76,12 +72,6 @@ def logout():
     logout_user()
     return redirect(url_for('views.home'))
 
-
-@auth.route('/fake_profile/<int:user_id>')
-@login_required
-def fake_profile(user_id):
-    user = User.query.get(user_id)
-    return render_template("fake_profile.html",user = user)
 
 @auth.route('/profile')
 @login_required

@@ -47,12 +47,20 @@
 
 
 			<h5>{{ event.title }}</h5>
+			
 
 			<blockquote class="blockquote mb-4">
-
+			
 				<button type="button" class="btn btn-primary eventid_helper" data-toggle="modal"
 					data-target="#createSubtaskModal{{ event.id }}" data-eventid="{{ event.id }}">Create
 					Subtask</button>
+				<div>
+					<button type="button" class="btn btn-primary main_checkbox" id="main_completed" name="main_completed"
+						data-event_id="{{ event.id }}">
+						<label class="form-check-label">
+							Completed
+						</label>
+				</div>
 
 				<div class="modal fade" id="createSubtaskModal{{ event.id }}" tabindex="-1" role="dialog"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -67,9 +75,8 @@
 							</div>
 							<div class="modal-body">
 								<form method="POST" action="{{ url_for('panel.create_group_subtask')}}">
-									<input type="hidden" name="group_id" value="{{ group.id }}">
 									<input type="hidden" name="event_id" value="{{ event.id }}">
-
+									<input type="hidden" name="group_id" value="{{group.id}}">
 									<div class="form-group">
 										<label for="subtask-title" class="col-form-label">Title:</label>
 										<input type="text" class="form-control" id="subtask-title" name="subtask-title">
@@ -89,29 +96,31 @@
 						</div>
 					</div>
 				</div>
-				<p><small>Description placeholder1.</small></p>
+				<p><small>{{event.description}}</small></p>
 				<footer class="footer"> <small> {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} - {{
 						event.end.date() }}; {{ event.end.strftime("%H:%M") }}</small> </footer>
 			</blockquote>
-
-			<ul>
-				{% for subtask in subtasks[event.id] %}
-				<li class="is_completed" data-is="{{subtask.is_completed}}"  data-event_id="{{ event.id }}">{{ subtask.title }}
-					<div class="form-check">
-						<input class="form-check-input sub_checkbox" type="checkbox" value="" id="is_completed"
-							name="is_completed" data-is_completed="{{subtask.is_completed}}"
-							data-sub_id="{{ subtask.id }}">
-						<label class="form-check-label" for="is_completed">
-							Completed
-						</label>
-					</div>
-				</li>
-				{% endfor %}
-			</ul>
+			<div class="container-ul">
+				<ul>
+					{% for subtask in subtasks[event.id] %}
+					<li class="is_completed" data-is="{{subtask.is_completed}}" data-event_id="{{ event.id }}">{{
+						subtask.title }}
+						<div class="form-check">
+							<input class="form-check-input sub_checkbox" type="checkbox" value="" id="is_completed"
+								name="is_completed" data-is_completed="{{subtask.is_completed}}"
+								data-sub_id="{{ subtask.id }}">
+							<label class="form-check-label" for="is_completed">
+								Completed
+							</label>
+						</div>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
 		</div>
 		<div class="col-md-2">
 			<span>
-				User
+				{{current_user.nickname}}
 			</span>
 		</div>
 		<div class="col-md-2">
@@ -120,23 +129,25 @@
 				{% set hours = duration_seconds // 3600 %}
 				{% set minutes = (duration_seconds % 3600) // 60 %}
 				{% set seconds = duration_seconds % 60 %}
-				{% if hours <= 24 %} {{ hours | int }}h {{ minutes | int }}m {% else %} {{ (event.end- now).days }}d {% endif
-					%} </div>
+				{% if hours <= 24 %} {{ hours | int }}h {{ minutes | int }}m {% else %} {{ (event.end- now).days }}d {%
+					endif %} </div>
 					<div class="col-md-2">
 
-						{% if event.end- now <= now-now %} <span class="badge badge-pill badge-warning">Closed</span>
-			{% elif event.end- now > now-now %}
-			<span class="badge badge-pill badge-success">In Progress</span>
-			{% endif %}
+						{% if now < event.start %} <span class="badge badge-pill badge-danger">New</span>
+			{% elif event.start <= now and now <= eventend %} <span class="badge badge-pill badge-success">In Progress</span>
+				{% else %}
+				<span class="badge badge-pill badge-warning">Closed</span>
+				{% endif %}
 		</div>
 		<div class="col-md-2 div_bar" data-ev_id="{{ event.id }}">
 			<div class="progress">
-			  <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"><span>0%</span></div>
+				<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+					style="width: 0%"><span>0%</span></div>
 			</div>
-		  </div>
+		</div>
 	</div>
 
-	
+
 	{% endfor %}
 
 
@@ -165,86 +176,115 @@
 {% endblock %}
 
 
+
 {% block scripts %}
 
 <script>
 
 
-function updateProgress(progressBarIndex, value) {
-  var progressBars = document.querySelectorAll('.div_bar');
-  if (progressBarIndex < progressBars.length) {
-    var progressBar = progressBars[progressBarIndex].querySelector('.progress-bar');
-    progressBar.style.width = value + '%';
-    progressBar.setAttribute('aria-valuenow', value);
-    progressBar.querySelector('span').textContent = value + '%';
-  }
-}
+	function updateProgress(progressBarIndex, value) {
+		var progressBars = document.querySelectorAll('.div_bar');
+		if (progressBarIndex < progressBars.length) {
+			var progressBar = progressBars[progressBarIndex].querySelector('.progress-bar');
+			progressBar.style.width = value + '%';
+			progressBar.setAttribute('aria-valuenow', value);
+			progressBar.querySelector('span').textContent = value + '%';
+		}
+	}
 
 	$(document).ready(function () {
 		var isCompletedList = [];
-		var eventIdList =[];
+		var eventIdList = [];
 
 		$('.eventid_helper').each(function () {
 			var tempId = $(this).data('eventid');
 			eventIdList.push(tempId);
 		});
-		console.log(eventIdList);
+		
 
 		$('.is_completed').each(function () {
 			var isCompleted = $(this).data('is');
 			var checkboxEventId = $(this).data('event_id')
 			isCompletedList.push([isCompleted, checkboxEventId]);
 		});
-		console.log(isCompletedList);
+		
 
 
 
-		for(var i = 0; i < eventIdList.length; i++)
-		{
+		for (var i = 0; i < eventIdList.length; i++) {
 			var counter = 0;
 			var count_true = 0;
 			var count_false = 0;
 
-			for (var j = 0; j < isCompletedList.length; j++)
-			{
-				
+			for (var j = 0; j < isCompletedList.length; j++) {
+
 				var pair = isCompletedList[j];
 
-				if(pair[1] == eventIdList[i])
-				{
+				if (pair[1] == eventIdList[i]) {
 					counter++;
-					if (pair[0].toString() === "True")
-					{
+					if (pair[0].toString() === "True") {
 						count_true++;
 					}
-					if (pair[0] === "False")
-					{
+					if (pair[0] === "False") {
 						count_false++;
 					}
 				}
-				else
-				{
+				else {
 					continue;
 				}
 			}
+
+			var mainButton = document.querySelector('.main_checkbox[data-event_id="' + eventIdList[i] + '"]');
+			if (count_true == counter && counter != 0) {
+				
+			}
+			else
+			{
+				mainButton.disabled = true;
+			}
+
+        	
+
 			let value;
 			value = (count_true / counter) * 100
-			if (count_true == 0) 
-			{
+			if (count_true == 0) {
 				value = 0;
 			}
 			value = value.toFixed(2)
 
 			var progressBarsList = document.querySelectorAll('.div_bar');
-			for(var g=0;g<progressBarsList.length;g++)
-			{
-				if(progressBarsList[g].dataset.ev_id==eventIdList[i])
-				{
+			for (var g = 0; g < progressBarsList.length; g++) {
+				if (progressBarsList[g].dataset.ev_id == eventIdList[i]) {
 					updateProgress(g, value);
 				}
 			}
+			
 		}
 	});
+
+
+	document.addEventListener('DOMContentLoaded', function () {
+
+		var elements = document.querySelectorAll('.main_checkbox ');
+		console.log(elements);
+
+		for (var i = 0; i < elements.length; i++) {
+
+			elements[i].addEventListener('click', function () {
+
+				var ev_id = this.dataset.event_id;
+				console.log(ev_id);
+				var done = true;
+				location.reload();
+
+				update_main_event_completion(ev_id, done);
+				//location.reload();
+			})
+		}
+		
+	});
+
+
 
 	document.addEventListener('DOMContentLoaded', function () {
 
@@ -259,6 +299,7 @@ function updateProgress(progressBarIndex, value) {
 				updateSubtask(subtaskId, isChecked);
 				location.reload();
 			})
+			
 		}
 	});
 
@@ -279,8 +320,27 @@ function updateProgress(progressBarIndex, value) {
 			id: subtaskId,
 			is_completed: isChecked
 		}));
-		
+
 	}
+	function update_main_event_completion(event_id, isDone) {
+	 	var xhr = new XMLHttpRequest();
+
+	 	xhr.open('POST', '/update_main_event_completion', true);
+	 	xhr.setRequestHeader('Content-Type', 'application/json');
+
+	 	xhr.onreadystatechange = function () {
+	 		if (xhr.readyState === 4 && xhr.status === 200) {
+	 			var response = JSON.parse(xhr.responseText);
+	 			console.log(response.message);
+	 		}
+	 	};
+
+	 	xhr.send(JSON.stringify({
+	 		ev_id: event_id,
+	 		is_done: isDone
+	 	}));
+		
+	 }
 
 	window.onload = function () {
 		var checkboxes = document.querySelectorAll('.sub_checkbox');

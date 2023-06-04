@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Callendary Home{% endblock %}
+
+{% block content %}
+<!--
+   ####################################################
+   M A I N C O N T E N T
+   ####################################################
+   -->
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Subtask</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>{{ event.title }}</td>
+                        <td>
+                            <small>
+                                {{ event.start.date() }}; {{ event.start.strftime("%H:%M") }} -
+                                {{ event.end.date() }}; {{ event.end.strftime("%H:%M") }}
+                            </small>
+                        </td>
+                        <td>
+                            {% if subtasks[event.id] %}
+                            <button class="btn btn-link" type="button" data-toggle="collapse"
+                                data-target="#collapse{{ event.id }}" aria-expanded="false"
+                                aria-controls="collapse{{ event.id }}">
+                                <span>Subtasks list</span>
+                            </button>
+                            <div class="collapse" id="collapse{{ event.id }}">
+                                <div class="card card-body">
+                                    <ul class="list-unstyled">
+                                        {% for subtask in subtasks[event.id] %}
+                                        <li>{{ subtask.title }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {% else %}
+                            <span>No subtasks available</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+<div class="col main">
+    <h1 class="display-4">Welcome to Callendary!</h1>
+    <p class="lead">Please login or sign up to access the website.</p>
+</div>
+</div>
+{% endif %}
+<!--
+    ####################################################
+    F O O T E R
+    ####################################################
+    -->
+<footer class="footer py-3">
+    <div class="container-fluid">
+    </div>
+</footer>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

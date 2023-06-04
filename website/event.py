@@ -125,7 +125,6 @@ def create_subtask():
     description = request.form.get('subtask-description')
     event_id = request.form.get('event_id')
     event = Event.query.get_or_404(event_id)
-    flash(event_id)
 
     subtask = Subtask(title=title, description = description, event_id = event_id)
 

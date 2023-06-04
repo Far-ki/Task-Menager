@@ -34,6 +34,8 @@ def history():
         return render_template('history.html',user = current_user,events=events,subtasks=subtasks,now=now)
     else:
         return render_template('history.html',user=current_user)
+
+
     
 @views.route('/calendar')
 def calendar():
@@ -131,11 +133,9 @@ def update_subtask():
 @views.route('/update_main_event_completion', methods=['POST'])
 def update_main_event_completion():
     event_id1 = request.json['ev_id']
-    flash(event_id1)
     is_done = request.json['is_done']
     event = Event.query.get(event_id1)
     
-    flash(is_done)
     if is_done == True:
       event.completed = 1
     else:
